@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import MainPage from '../pages/Main';
+import MainPage from '../pages/MainPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +17,10 @@ const router = createBrowserRouter(
         element={
           <>
             <Header />
-            <Outlet />
+            <main>
+              <Outlet />
+            </main>
+
             <Footer />
           </>
         }
