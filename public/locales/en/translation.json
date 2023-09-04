@@ -1,1 +1,18 @@
-{}
+{
+  "footer": {},
+  "mainpage": {
+    "welcome": "Welcome!",
+    "titles": {
+      "main": "Awesome project management app",
+      "features": "Features",
+      "team": "Meet the team"
+    },
+    "features": {
+      "organize": "Organize your team",
+      "plan": "Plan projects and assign responsibility",
+      "collaborate": "Collaborate efficiently",
+      "track": "Track progress and deliver on time",
+      "enjoy": "Enjoy the results of your work"
+    }
+  }
+}

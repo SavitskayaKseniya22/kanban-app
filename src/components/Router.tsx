@@ -17,9 +17,8 @@ const router = createBrowserRouter(
         element={
           <>
             <Header />
-            <main>
-              <Outlet />
-            </main>
+
+            <Outlet />
 
             <Footer />
           </>
