@@ -6,7 +6,7 @@ import {
   createRoutesFromElements,
   Navigate,
 } from 'react-router-dom';
-import Header from './Header';
+import Header from './header/Header';
 import Footer from './Footer';
 import MainPage from '../pages/MainPage';
 
@@ -17,9 +17,7 @@ const router = createBrowserRouter(
         element={
           <>
             <Header />
-
             <Outlet />
-
             <Footer />
           </>
         }

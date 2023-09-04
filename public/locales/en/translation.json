@@ -1,12 +1,12 @@
 {
   "header": {
-    "edit": "Edit profile",
+    "profile": "Profile",
     "logout": "Log out",
     "search": "search",
     "newBoard": "Create new board",
     "signin": "Sign in",
     "signup": "Sign up",
-    "goMain": "Go to Main Page",
+    "goBoard": "Go to Board",
     "newColumn": "Create new column"
   },
   "footer": {},
