@@ -1,4 +1,14 @@
 {
+  "header": {
+    "edit": "Edit profile",
+    "logout": "Log out",
+    "search": "search",
+    "newBoard": "Create new board",
+    "signin": "Sign in",
+    "signup": "Sign up",
+    "goMain": "Go to Main Page",
+    "newColumn": "Create new column"
+  },
   "footer": {},
   "mainpage": {
     "welcome": "Welcome!",
