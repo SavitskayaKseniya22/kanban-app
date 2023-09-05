@@ -14,8 +14,9 @@ import {
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import userReducer from './auth/authSlice';
-
+import kanbanReducer from './kanban/kanbanSlice';
 import { authApi } from './auth/authApi';
+import { kanbanApi } from './kanban/kanbanApi';
 
 const persistConfig = {
   key: 'remember-moments-app-root',
@@ -26,13 +27,14 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     user: userReducer,
+    kanban: kanbanReducer,
   })
 );
 
 const rootReducer = combineReducers({
   persist: persistedReducer,
-
   [authApi.reducerPath]: authApi.reducer,
+  [kanbanApi.reducerPath]: kanbanApi.reducer,
 });
 
 export const store = configureStore({
@@ -42,7 +44,9 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(authApi.middleware),
+    })
+      .concat(authApi.middleware)
+      .concat(kanbanApi.middleware),
 });
 
 export const persistor = persistStore(store);

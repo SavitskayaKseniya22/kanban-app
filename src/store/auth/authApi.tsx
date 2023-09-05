@@ -74,7 +74,7 @@ export const authApi = createApi({
         }
       },
     }),
-    getUserData: builder.mutation({
+    getProfileData: builder.mutation({
       query: (idToken: string) => ({
         url: `:lookup?key=${apiKey}`,
         method: 'POST',
@@ -181,7 +181,7 @@ export const authApi = createApi({
 export const {
   useSignUpMutation,
   useSignInMutation,
-  useGetUserDataMutation,
+  useGetProfileDataMutation,
   useChangePasswordMutation,
   useChangeEmailMutation,
   useDeleteProfileMutation,

@@ -70,3 +70,62 @@ export interface ChangeEmailArgsTypes {
   idToken: string;
   email: string;
 }
+
+export interface ItemTypes {
+  title: string;
+  description: string;
+  order: number;
+}
+
+export interface ColumnTypes {
+  name: string;
+  description: string;
+  order: number;
+  data: { [itemId: string]: ItemTypes };
+}
+
+export interface BoardTypes {
+  name: string;
+  description: string;
+  order: number;
+  data: { [columnId: string]: ColumnTypes };
+}
+
+export interface BoardListTypes {
+  [boardId: string]: BoardTypes;
+}
+
+/* export interface UserTypes {
+  [user: string]: {
+    [board: string]: {
+      [column: string]: {
+        [item: string]: {
+          title: string;
+          content: string
+        };
+      };
+    };
+  };
+} 
+
+
+{
+  "vasya": {
+    "board1": {
+      "column1": {
+        "str1": {
+          "name": "string",
+          "data": "ItemTypes"
+        },
+        "str2": {}
+      },
+      "column2": {}
+    },
+    "board2": {}
+  }
+}
+
+
+
+
+*/

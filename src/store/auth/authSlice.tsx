@@ -2,20 +2,12 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { ActiveUserTypes } from '../../interfaces';
 
-export interface ColumnTypes {
-  id: string;
-  name: string;
-  strings: { id: string; value: string }[];
-}
-
 export interface AuthState {
   activeUser: ActiveUserTypes | undefined;
-  userData: ColumnTypes[];
 }
 
 const initialState: AuthState = {
   activeUser: undefined,
-  userData: [],
 };
 
 export const authSlice = createSlice({
@@ -26,15 +18,12 @@ export const authSlice = createSlice({
       state.activeUser = action.payload;
     },
 
-    updateUserData: (state, action: PayloadAction<ColumnTypes>) => {
-      state.userData = [...state.userData, action.payload];
-    },
     resetActiveUser: (state) => {
       state.activeUser = initialState.activeUser;
     },
   },
 });
 
-export const { updateActiveUser, resetActiveUser, updateUserData } = authSlice.actions;
+export const { updateActiveUser, resetActiveUser } = authSlice.actions;
 
 export default authSlice.reducer;
