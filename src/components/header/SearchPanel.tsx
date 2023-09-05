@@ -11,9 +11,6 @@ const StyledSearchPanel = styled('form')`
     padding: 0.5rem 1rem;
     flex-grow: 1;
     border: none;
-    &:valid {
-      border: none;
-    }
   }
 
   button {
