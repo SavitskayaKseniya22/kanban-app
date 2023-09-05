@@ -6,9 +6,27 @@ import {
   createRoutesFromElements,
   Navigate,
 } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Header from './header/Header';
 import Footer from './Footer';
 import MainPage from '../pages/MainPage';
+import { AuthForm } from './auth/AuthForm';
+import { RootState } from '../store/store';
+
+function PrivateRoute() {
+  const { activeUser } = useSelector((state: RootState) => state.persist.user);
+  return !activeUser ? <Navigate to="/" /> : <Outlet />;
+}
+
+function PrivateAuthRoute() {
+  const { activeUser } = useSelector((state: RootState) => state.persist.user);
+  return activeUser ? <Navigate to="/board" /> : <Outlet />;
+}
+
+function PrivateProfileRoute() {
+  const { activeUser } = useSelector((state: RootState) => state.persist.user);
+  return !activeUser ? <Navigate to="/auth/login" /> : <Outlet />;
+}
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,14 +41,21 @@ const router = createBrowserRouter(
         }
       >
         <Route index element={<MainPage />} />
-        <Route path="auth" element={<Outlet />}>
-          <Route index element={<Navigate to="login" />} />
-          <Route path="login" element="<div>login</div>" />
-          <Route path="registration" element="<div>reg</div>" />
+        <Route element={<PrivateAuthRoute />}>
+          <Route path="auth" element={<Outlet />}>
+            <Route index element={<Navigate to="login" />} />
+            <Route path="login" element={<AuthForm formType="login" />} />
+            <Route path="registration" element={<AuthForm formType="registration" />} />
+          </Route>
         </Route>
-        <Route path="board" element={<Outlet />}>
-          <Route index element="<div>board</div>" />
-          <Route path=":id" element="<div>id</div>" />
+        <Route element={<PrivateRoute />}>
+          <Route path="board" element={<Outlet />}>
+            <Route index element="<div>board</div>" />
+            <Route path=":id" element="<div>id</div>" />
+          </Route>
+        </Route>
+        <Route element={<PrivateProfileRoute />}>
+          <Route path="profile" element="<div>profile</div>" />
         </Route>
         <Route path="*" element="<div>404</div>" />
       </Route>

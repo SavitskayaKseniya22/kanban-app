@@ -24,5 +24,30 @@
       "track": "Track progress and deliver on time",
       "enjoy": "Enjoy the results of your work"
     }
+  },
+  "formValidation": {
+    "required": "This is required",
+    "onlyLetters": "The value must contain only letters",
+    "short": "The value is too short",
+    "email": "Entered value does not match email format",
+    "noMatches": "No matches found"
+  },
+  "auth": {
+    "error": {},
+    "success": {
+      "emailChanged": "Email changed successfully. Please login again.",
+      "passwordChanged": "Password changed successfully. Please login again.",
+      "accountDeleted": "You successfully deleted your account",
+      "dataUploaded": "Account data uploaded successfully",
+      "dataUpdated": "Accout data changed succesfully"
+    },
+    "warn": {},
+    "action": {
+      "changePassword": "Change password",
+      "changeEmail": "Change email",
+      "deleteProfile": "Delete profile",
+      "updateData": "Update account data",
+      "refreshData": "Refresh account data"
+    }
   }
 }
