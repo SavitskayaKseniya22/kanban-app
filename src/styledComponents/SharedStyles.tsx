@@ -15,4 +15,16 @@ export const StyledButtonDefault = css`
   }
 `;
 
-export const StyledList = css``;
+export const StyledIconButton = css`
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: transparent;
+  transition: color 0.5s;
+  border: none;
+
+  &:hover {
+    color: #fca311;
+    transition: 0.5s;
+  }
+`;

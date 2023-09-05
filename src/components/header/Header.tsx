@@ -80,14 +80,14 @@ function Header() {
     const headerWithLoginNotOnBoard = (
       <>
         {headerBasic}
-        <Link to="/board" className="header__button_go-board">
+        <Link to="/boards" className="header__button_go-board">
           {t('header.goBoard')}
         </Link>
       </>
     );
 
     if (activeUser) {
-      if (location.pathname !== '/board') {
+      if (location.pathname !== '/boards') {
         return headerWithLoginNotOnBoard;
       }
       return headerBasic;

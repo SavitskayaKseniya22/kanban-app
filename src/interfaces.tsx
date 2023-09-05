@@ -71,7 +71,7 @@ export interface ChangeEmailArgsTypes {
   email: string;
 }
 
-export interface ItemTypes {
+export interface TaskTypes {
   title: string;
   description: string;
   order: number;
@@ -81,7 +81,7 @@ export interface ColumnTypes {
   name: string;
   description: string;
   order: number;
-  data: { [itemId: string]: ItemTypes };
+  data: { [itemId: string]: TaskTypes };
 }
 
 export interface BoardTypes {

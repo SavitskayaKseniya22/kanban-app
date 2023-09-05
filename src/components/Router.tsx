@@ -12,7 +12,8 @@ import Footer from './Footer';
 import MainPage from '../pages/MainPage';
 import { AuthForm } from './auth/AuthForm';
 import { RootState } from '../store/store';
-import BoardsList from '../pages/Boards/BoardsList';
+import BoardsList from '../pages/boards/BoardsList';
+import Board from '../pages/board/Board';
 
 function PrivateRoute() {
   const { activeUser } = useSelector((state: RootState) => state.persist.user);
@@ -21,7 +22,7 @@ function PrivateRoute() {
 
 function PrivateAuthRoute() {
   const { activeUser } = useSelector((state: RootState) => state.persist.user);
-  return activeUser ? <Navigate to="/board" /> : <Outlet />;
+  return activeUser ? <Navigate to="/boards" /> : <Outlet />;
 }
 
 function PrivateProfileRoute() {
@@ -52,7 +53,7 @@ const router = createBrowserRouter(
         <Route element={<PrivateRoute />}>
           <Route path="boards" element={<Outlet />}>
             <Route index element={<BoardsList />} />
-            <Route path=":id" element="<div>id</div>" />
+            <Route path=":id" element={<Board />} />
           </Route>
         </Route>
         <Route element={<PrivateProfileRoute />}>

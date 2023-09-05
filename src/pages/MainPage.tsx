@@ -25,7 +25,6 @@ const StyledFirstScreen = styled('div')`
   h1 {
     width: 100%;
     text-align: center;
-    margin: 0;
     padding: 2rem;
     border-radius: 0.5rem;
     background-color: rgba(230, 230, 230, 0.6);
@@ -49,7 +48,6 @@ const StyledFeatureListItem = styled('li')`
 
   h3 {
     text-align: center;
-    margin: 0;
     padding: 1rem;
     border-radius: 0.5rem;
     background-color: rgba(230, 230, 230, 0.6);

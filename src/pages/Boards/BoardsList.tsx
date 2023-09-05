@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { useGetUserBoardQuery } from '../../store/kanban/kanbanApi';
-import BoardItemShortCut, { StyledBoardItemShortCut } from './BoardItemShortCut';
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
+import { useGetAllBoardsQuery } from '../../store/kanban/kanbanApi';
+import BoardItemShortCut, { StyledBoardItemShortCut } from './BoardItemShortCut';
 
 const StyledBoardsList = styled('main')`
   flex-wrap: wrap;
@@ -14,7 +14,7 @@ const StyledBoardsList = styled('main')`
 `;
 
 function BoardsList() {
-  const { data } = useGetUserBoardQuery('vasya');
+  const { data } = useGetAllBoardsQuery('vasya');
   const { t } = useTranslation();
 
   return (

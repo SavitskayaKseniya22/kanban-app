@@ -8,7 +8,7 @@ export const kanbanApi = createApi({
     baseUrl: 'https://project-management-app-6c958-default-rtdb.europe-west1.firebasedatabase.app/',
   }),
   endpoints: (builder) => ({
-    getUserBoard: builder.query({
+    getAllBoards: builder.query({
       query: (userId: string) => ({
         url: `${userId}.json`,
         method: 'GET',
@@ -27,4 +27,4 @@ export const kanbanApi = createApi({
   }),
 });
 
-export const { useGetUserBoardQuery } = kanbanApi;
+export const { useGetAllBoardsQuery } = kanbanApi;
