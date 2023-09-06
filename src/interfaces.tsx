@@ -78,14 +78,14 @@ export interface TaskTypes {
 }
 
 export interface ColumnTypes {
-  name: string;
+  title: string;
   description: string;
   order: number;
   data: { [itemId: string]: TaskTypes };
 }
 
 export interface BoardTypes {
-  name: string;
+  title: string;
   description: string;
   order: number;
   data: { [columnId: string]: ColumnTypes };

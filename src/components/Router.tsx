@@ -6,7 +6,8 @@ import {
   createRoutesFromElements,
   Navigate,
 } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import Header from './header/Header';
 import Footer from './Footer';
 import MainPage from '../pages/MainPage';
@@ -14,20 +15,32 @@ import { AuthForm } from './auth/AuthForm';
 import { RootState } from '../store/store';
 import BoardsList from '../pages/boards/BoardsList';
 import Board from '../pages/board/Board';
+import { resetActiveUser } from '../store/auth/authSlice';
+
+function isItExpired(loginTime: number, expiresIn: string) {
+  return (Date.now() - loginTime) / 1000 > +expiresIn;
+}
 
 function PrivateRoute() {
-  const { activeUser } = useSelector((state: RootState) => state.persist.user);
-  return !activeUser ? <Navigate to="/" /> : <Outlet />;
+  const dispatch = useDispatch();
+  const { activeUser, loginTime } = useSelector((state: RootState) => state.persist.user);
+  if (loginTime && activeUser && !isItExpired(loginTime, activeUser.expiresIn)) {
+    return <Outlet />;
+  }
+  toast.warn('Your session expired. Please login again');
+  dispatch(resetActiveUser());
+  return <Navigate to="/auth/login" />;
 }
 
 function PrivateAuthRoute() {
-  const { activeUser } = useSelector((state: RootState) => state.persist.user);
-  return activeUser ? <Navigate to="/boards" /> : <Outlet />;
-}
-
-function PrivateProfileRoute() {
-  const { activeUser } = useSelector((state: RootState) => state.persist.user);
-  return !activeUser ? <Navigate to="/auth/login" /> : <Outlet />;
+  const dispatch = useDispatch();
+  const { activeUser, loginTime } = useSelector((state: RootState) => state.persist.user);
+  if (loginTime && activeUser && !isItExpired(loginTime, activeUser.expiresIn)) {
+    return <Navigate to="/boards" />;
+  }
+  toast.warn('Your session expired. Please login again');
+  dispatch(resetActiveUser());
+  return <Outlet />;
 }
 
 const router = createBrowserRouter(
@@ -55,8 +68,6 @@ const router = createBrowserRouter(
             <Route index element={<BoardsList />} />
             <Route path=":id" element={<Board />} />
           </Route>
-        </Route>
-        <Route element={<PrivateProfileRoute />}>
           <Route path="profile" element="<div>profile</div>" />
         </Route>
         <Route path="*" element="<div>404</div>" />

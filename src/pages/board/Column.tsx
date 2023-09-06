@@ -51,7 +51,7 @@ const StyledColumn = styled('div')`
 `;
 
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
-  const { name, description, data } = columnProp;
+  const { title, description, data } = columnProp;
   return (
     <StyledColumn>
       <div className="column__controls">
@@ -76,7 +76,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         </button>
       </div>
       <div className="column__info">
-        <h3>{name}</h3>
+        <h3>{title}</h3>
         <p>{description}</p>
       </div>
 

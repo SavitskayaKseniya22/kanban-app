@@ -4,10 +4,12 @@ import { ActiveUserTypes } from '../../interfaces';
 
 export interface AuthState {
   activeUser: ActiveUserTypes | undefined;
+  loginTime: number | undefined;
 }
 
 const initialState: AuthState = {
   activeUser: undefined,
+  loginTime: undefined,
 };
 
 export const authSlice = createSlice({
@@ -18,12 +20,21 @@ export const authSlice = createSlice({
       state.activeUser = action.payload;
     },
 
+    updateLoginTime: (state, action: PayloadAction<string | undefined>) => {
+      if (action.payload === 'mark') {
+        state.loginTime = Date.now();
+      } else {
+        state.loginTime = initialState.loginTime;
+      }
+    },
+
     resetActiveUser: (state) => {
       state.activeUser = initialState.activeUser;
+      state.loginTime = initialState.loginTime;
     },
   },
 });
 
-export const { updateActiveUser, resetActiveUser } = authSlice.actions;
+export const { updateActiveUser, resetActiveUser, updateLoginTime } = authSlice.actions;
 
 export default authSlice.reducer;

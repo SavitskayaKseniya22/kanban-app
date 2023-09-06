@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { BoardTypes } from '../../interfaces';
+import { useDeleteBoardMutation } from '../../store/kanban/kanbanApi';
 
 export const StyledBoardItemShortCut = styled('div')`
   text-align: center;
@@ -30,21 +31,23 @@ export const StyledBoardItemShortCut = styled('div')`
   }
 `;
 
-function BoardItemShortCut({ board, id }: { board: BoardTypes; id: string }) {
-  const { name, description } = board;
+function BoardItemShortCut({ board, boardId }: { board: BoardTypes; boardId: string }) {
+  const { title, description } = board;
+  const [deleteBoard] = useDeleteBoardMutation();
 
   return (
-    <StyledBoardItemShortCut>
-      <h3>{name}</h3>
+    <StyledBoardItemShortCut data-id={boardId}>
+      <h3>{title}</h3>
       <p>{description}</p>
       <div className="controls">
-        <Link to={`${id}`}>
+        <Link to={`${boardId}`}>
           <i className="fa-solid fa-up-right-from-square" />
         </Link>
         <button
           type="button"
           onClick={() => {
             console.log('delete');
+            deleteBoard({ userId: 'vasya', boardId });
           }}
         >
           <i className="fa-solid fa-trash-can" />

@@ -9,7 +9,7 @@ import {
   AuthErrorTypes,
   ActiveUserListDataTypes,
 } from '../../interfaces';
-import { resetActiveUser, updateActiveUser } from './authSlice';
+import { updateLoginTime, resetActiveUser, updateActiveUser } from './authSlice';
 
 export function transformAuthError(response: FetchBaseQueryError) {
   const { message } = (response.data as AuthErrorTypes).error;
@@ -65,6 +65,7 @@ export const authApi = createApi({
         try {
           const { data } = await queryFulfilled;
           dispatch(updateActiveUser(data));
+          dispatch(updateLoginTime('mark'));
           toast.success("You've successfully logged in");
         } catch (err) {
           if (err && typeof err === 'object' && 'error' in err) {
