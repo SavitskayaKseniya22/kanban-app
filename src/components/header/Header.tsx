@@ -8,6 +8,7 @@ import SearchPanel from './SearchPanel';
 import { StyledButtonDefault } from '../../styledComponents/SharedStyles';
 import { RootState } from '../../store/store';
 import { resetActiveUser } from '../../store/auth/authSlice';
+import Logo from './Logo';
 
 const StyledHeader = styled('header')`
   display: flex;
@@ -95,7 +96,12 @@ function Header() {
     return headerWithoutLogin;
   };
 
-  return <StyledHeader>{getHeaderContent()}</StyledHeader>;
+  return (
+    <StyledHeader>
+      <Logo />
+      {getHeaderContent()}
+    </StyledHeader>
+  );
 }
 
 export default Header;

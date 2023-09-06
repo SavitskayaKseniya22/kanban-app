@@ -24,22 +24,30 @@ function isItExpired(loginTime: number, expiresIn: string) {
 function PrivateRoute() {
   const dispatch = useDispatch();
   const { activeUser, loginTime } = useSelector((state: RootState) => state.persist.user);
-  if (loginTime && activeUser && !isItExpired(loginTime, activeUser.expiresIn)) {
-    return <Outlet />;
+
+  if (loginTime && activeUser) {
+    if (isItExpired(loginTime, activeUser.expiresIn)) {
+      toast.warn('Your session expired. Please login again');
+      dispatch(resetActiveUser());
+    } else {
+      return <Outlet />;
+    }
   }
-  toast.warn('Your session expired. Please login again');
-  dispatch(resetActiveUser());
   return <Navigate to="/auth/login" />;
 }
 
 function PrivateAuthRoute() {
   const dispatch = useDispatch();
   const { activeUser, loginTime } = useSelector((state: RootState) => state.persist.user);
-  if (loginTime && activeUser && !isItExpired(loginTime, activeUser.expiresIn)) {
-    return <Navigate to="/boards" />;
+  if (loginTime && activeUser) {
+    if (isItExpired(loginTime, activeUser.expiresIn)) {
+      toast.warn('Your session expired. Please login again');
+      dispatch(resetActiveUser());
+    } else {
+      return <Navigate to="/boards" />;
+    }
   }
-  toast.warn('Your session expired. Please login again');
-  dispatch(resetActiveUser());
+
   return <Outlet />;
 }
 

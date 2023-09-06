@@ -10,13 +10,23 @@ const StyledFooter = styled('footer')`
   padding: 0.5rem;
   background-color: #7953f5;
   color: white;
+  gap: 1rem;
+  a {
+    display: block;
+    width: 60px;
+    height: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 `;
 
 function Footer() {
   return (
     <StyledFooter>
       <Link to="https://github.com/SavitskayaKseniya22" target="blank" title="Developer's GitHub">
-        <img src={gitHubLogo} alt="gitHub" width={60} height={20} />
+        <img src={gitHubLogo} alt="gitHub" />
       </Link>
       <span>&#169; 2023</span>
     </StyledFooter>
