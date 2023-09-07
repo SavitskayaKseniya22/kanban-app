@@ -210,6 +210,32 @@ export const kanbanApi = createApi({
         }
       },
     }),
+    replaceColumnContent: builder.mutation({
+      query: ({
+        userId,
+        boardId,
+        columnId,
+        data,
+      }: {
+        userId: string;
+        boardId: string;
+        columnId: string;
+        data: ColumnDataTypes;
+      }) => ({
+        url: `${userId}/${boardId}/data/${columnId}/data/.json`,
+        method: 'PUT',
+        body: data,
+      }),
+
+      async onQueryStarted(attr, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success('You successfully refreshed column');
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
   }),
 });
 
@@ -222,4 +248,5 @@ export const {
   useGetBoardQuery,
   useDeleteColumnMutation,
   useDeleteTaskMutation,
+  useReplaceColumnContentMutation,
 } = kanbanApi;

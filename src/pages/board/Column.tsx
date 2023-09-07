@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { ColumnDataTypes, ColumnTypes } from '../../interfaces';
-import Task from './Task';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useAddTaskMutation, useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
+import ColumnContent from './ColumnContent';
 
 const StyledColumn = styled('div')`
   display: flex;
@@ -125,13 +125,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-
-      <ul className="column__tasks">
-        {data &&
-          Array.from(Object.keys(data)).map((taskItemId) => (
-            <Task taskProp={data[taskItemId]} key={taskItemId + Date.now()} />
-          ))}
-      </ul>
+      {data && <ColumnContent data={data} />}
     </StyledColumn>
   );
 }
