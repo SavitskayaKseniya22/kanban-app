@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
 import { useAddBoardMutation, useGetAllBoardsQuery } from '../../store/kanban/kanbanApi';
 import BoardItemShortCut, { StyledBoardItemShortCut } from './BoardItemShortCut';
 import { BoardListTypes } from '../../interfaces';
+import { RootState } from '../../store/store';
 
 const StyledBoardsList = styled('main')`
   flex-wrap: wrap;
@@ -18,33 +20,26 @@ const StyledBoardsList = styled('main')`
   }
 `;
 
-function createBoard(): BoardListTypes {
+function createBoard({ userId }: { userId: string }): BoardListTypes {
   const boardName = Date.now().toString();
   return {
     [boardName]: {
+      id: boardName,
       title: 'board1Name',
       description: 'description',
       order: 1,
-      data: {
-        column1: {
-          title: 'column1Name',
-          description: 'description1',
-          order: 1,
-          data: {
-            str1: {
-              title: 'string',
-              description: 'string',
-              order: 1,
-            },
-          },
-        },
+      ancestors: {
+        userId,
       },
+      data: {},
     },
   };
 }
 
 function BoardsList() {
-  const { data } = useGetAllBoardsQuery('vasya');
+  const { activeUser } = useSelector((state: RootState) => state.persist.user);
+  const userId = useRef(activeUser!.localId).current;
+  const { data } = useGetAllBoardsQuery(userId, { skip: !activeUser });
   const { t } = useTranslation();
   const [addBoard] = useAddBoardMutation();
 
@@ -52,13 +47,12 @@ function BoardsList() {
     <StyledBoardsList>
       {data &&
         Array.from(Object.keys(data)).map((boardId) => (
-          <BoardItemShortCut board={data[boardId]} boardId={boardId} key={boardId + Date.now()} />
+          <BoardItemShortCut board={data[boardId]} key={boardId + Date.now()} />
         ))}
       <StyledBoardItemShortCut
         className="board-list__create"
         onClick={() => {
-          console.log('create');
-          addBoard({ userId: 'vasya', data: createBoard() });
+          addBoard({ userId, data: createBoard({ userId }) });
         }}
       >
         <h3>{t('header.newBoard')}</h3>

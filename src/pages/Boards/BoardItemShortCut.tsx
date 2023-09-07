@@ -31,23 +31,22 @@ export const StyledBoardItemShortCut = styled('div')`
   }
 `;
 
-function BoardItemShortCut({ board, boardId }: { board: BoardTypes; boardId: string }) {
-  const { title, description } = board;
+function BoardItemShortCut({ board }: { board: BoardTypes }) {
+  const { title, description, id } = board;
   const [deleteBoard] = useDeleteBoardMutation();
 
   return (
-    <StyledBoardItemShortCut data-id={boardId}>
+    <StyledBoardItemShortCut data-id={id}>
       <h3>{title}</h3>
       <p>{description}</p>
       <div className="controls">
-        <Link to={`${boardId}`}>
+        <Link to={`${id}`}>
           <i className="fa-solid fa-up-right-from-square" />
         </Link>
         <button
           type="button"
           onClick={() => {
-            console.log('delete');
-            deleteBoard({ userId: 'vasya', boardId });
+            deleteBoard({ userId: board.ancestors.userId, boardId: id });
           }}
         >
           <i className="fa-solid fa-trash-can" />

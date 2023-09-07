@@ -1,22 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ColumnTypes } from '../../interfaces';
+
+import { ColumnDataTypes, ColumnTypes } from '../../interfaces';
 import Task from './Task';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
+import { useAddTaskMutation, useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
 
 const StyledColumn = styled('div')`
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
-  width: 450px;
-  padding: 1rem;
+  width: 350px;
+  padding: 0.5rem;
   gap: 1rem;
   background-color: rgba(230, 230, 230, 0.6);
+  flex-shrink: 0;
 
   .column__tasks {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    height: 100%;
+    gap: 0.5rem;
     background-color: #e5e5e5;
     border-radius: 0.5rem;
     padding: 0.5rem;
@@ -50,15 +54,44 @@ const StyledColumn = styled('div')`
   }
 `;
 
+export function createTask({
+  userId,
+  boardId,
+  columnId,
+}: {
+  userId: string;
+  boardId: string;
+  columnId: string;
+}): ColumnDataTypes {
+  const taskName = Date.now().toString();
+
+  return {
+    [taskName]: {
+      id: taskName,
+      title: taskName,
+      description: 'string',
+      order: 1,
+      ancestors: {
+        columnId,
+        boardId,
+        userId,
+      },
+    },
+  };
+}
+
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
-  const { title, description, data } = columnProp;
+  const { title, description, data, id, ancestors } = columnProp;
+  const [addTask] = useAddTaskMutation();
+  const [deleteColumn] = useDeleteColumnMutation();
   return (
     <StyledColumn>
       <div className="column__controls">
         <button
           type="button"
           onClick={() => {
-            console.log('edit');
+            console.log('delete');
+            deleteColumn({ userId: ancestors.userId, columnId: id, boardId: ancestors.boardId });
           }}
           className="column__controls_delete"
         >
@@ -68,7 +101,17 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <button
           type="button"
           onClick={() => {
-            console.log('edit');
+            console.log('add');
+            addTask({
+              userId: ancestors.userId,
+              columnId: id,
+              boardId: ancestors.boardId,
+              data: createTask({
+                userId: ancestors.userId,
+                columnId: id,
+                boardId: ancestors.boardId,
+              }),
+            });
           }}
           className="column__controls_add"
         >

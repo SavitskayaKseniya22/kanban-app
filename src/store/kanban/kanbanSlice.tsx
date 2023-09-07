@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { BoardListTypes, ColumnTypes } from '../../interfaces';
+import { BoardListTypes } from '../../interfaces';
 
 export interface KanbanState {
   boards: BoardListTypes;
@@ -18,23 +18,12 @@ export const kanbanSlice = createSlice({
       state.boards = action.payload;
     },
 
-    addBoard: (state, action: PayloadAction<BoardListTypes>) => {
-      state.boards = Object.assign(state.boards, action.payload);
-    },
-
-    addColumn: (state, action: PayloadAction<{ data: ColumnTypes; boardId: string }>) => {
-      state.boards[action.payload.boardId] = Object.assign(
-        state.boards[action.payload.boardId],
-        action.payload.data
-      );
-    },
-
     resetBoardsList: (state) => {
       state.boards = initialState.boards;
     },
   },
 });
 
-export const { addBoard, replaceBoardsList, resetBoardsList } = kanbanSlice.actions;
+export const { replaceBoardsList, resetBoardsList } = kanbanSlice.actions;
 
 export default kanbanSlice.reducer;

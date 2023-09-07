@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { TaskTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
+import { useDeleteTaskMutation } from '../../store/kanban/kanbanApi';
 
 const StyledTask = styled('li')`
   display: flex;
@@ -35,7 +36,9 @@ const StyledTask = styled('li')`
 `;
 
 function Task({ taskProp }: { taskProp: TaskTypes }) {
-  const { title, description } = taskProp;
+  const { title, description, ancestors, id } = taskProp;
+  const { columnId, boardId, userId } = ancestors;
+  const [deleteTask] = useDeleteTaskMutation();
   return (
     <StyledTask>
       <div className="task__info">
@@ -57,6 +60,7 @@ function Task({ taskProp }: { taskProp: TaskTypes }) {
           type="button"
           onClick={() => {
             console.log('delete');
+            deleteTask({ userId, boardId, columnId, taskId: id });
           }}
         >
           <i className="fa-solid fa-trash-can" />

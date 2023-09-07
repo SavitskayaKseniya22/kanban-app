@@ -72,23 +72,46 @@ export interface ChangeEmailArgsTypes {
 }
 
 export interface TaskTypes {
+  id: string;
   title: string;
   description: string;
   order: number;
+  ancestors: {
+    columnId: string;
+    boardId: string;
+    userId: string;
+  };
+}
+
+export interface ColumnDataTypes {
+  [itemId: string]: TaskTypes;
 }
 
 export interface ColumnTypes {
+  id: string;
   title: string;
   description: string;
   order: number;
-  data: { [itemId: string]: TaskTypes };
+  ancestors: {
+    boardId: string;
+    userId: string;
+  };
+  data: ColumnDataTypes;
+}
+
+export interface BoardDataTypes {
+  [columnId: string]: ColumnTypes;
 }
 
 export interface BoardTypes {
+  id: string;
   title: string;
   description: string;
   order: number;
-  data: { [columnId: string]: ColumnTypes };
+  ancestors: {
+    userId: string;
+  };
+  data: BoardDataTypes;
 }
 
 export interface BoardListTypes {
