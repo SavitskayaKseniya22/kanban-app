@@ -33,9 +33,6 @@ const StyledColumn = styled('div')`
     justify-content: center;
     align-items: center;
     text-align: center;
-    h3 {
-      cursor: text;
-    }
   }
 
   .column__controls {
@@ -63,12 +60,12 @@ export function createTask({
   boardId: string;
   columnId: string;
 }): ColumnDataTypes {
-  const taskName = Date.now().toString();
+  const taskId = Date.now().toString();
 
   return {
-    [taskName]: {
-      id: taskName,
-      title: taskName,
+    [taskId]: {
+      taskId,
+      title: taskId,
       description: 'string',
       order: 1,
       ancestors: {
@@ -81,7 +78,8 @@ export function createTask({
 }
 
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
-  const { title, description, data, id, ancestors } = columnProp;
+  const { title, description, data, columnId, ancestors } = columnProp;
+  const { userId, boardId } = ancestors;
   const [addTask] = useAddTaskMutation();
   const [deleteColumn] = useDeleteColumnMutation();
   return (
@@ -90,26 +88,31 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <button
           type="button"
           onClick={() => {
-            console.log('delete');
-            deleteColumn({ userId: ancestors.userId, columnId: id, boardId: ancestors.boardId });
+            console.log('edit');
+          }}
+        >
+          <i className="fa-solid fa-pen" />
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            deleteColumn({ userId, columnId, boardId });
           }}
           className="column__controls_delete"
         >
           <i className="fa-solid fa-trash-can" />
         </button>
-
         <button
           type="button"
           onClick={() => {
-            console.log('add');
             addTask({
-              userId: ancestors.userId,
-              columnId: id,
-              boardId: ancestors.boardId,
+              userId,
+              columnId,
+              boardId,
               data: createTask({
-                userId: ancestors.userId,
-                columnId: id,
-                boardId: ancestors.boardId,
+                userId,
+                columnId,
+                boardId,
               }),
             });
           }}

@@ -36,7 +36,7 @@ const StyledTask = styled('li')`
 `;
 
 function Task({ taskProp }: { taskProp: TaskTypes }) {
-  const { title, description, ancestors, id } = taskProp;
+  const { title, description, ancestors, taskId } = taskProp;
   const { columnId, boardId, userId } = ancestors;
   const [deleteTask] = useDeleteTaskMutation();
   return (
@@ -60,7 +60,7 @@ function Task({ taskProp }: { taskProp: TaskTypes }) {
           type="button"
           onClick={() => {
             console.log('delete');
-            deleteTask({ userId, boardId, columnId, taskId: id });
+            deleteTask({ userId, boardId, columnId, taskId });
           }}
         >
           <i className="fa-solid fa-trash-can" />

@@ -21,11 +21,11 @@ const StyledBoardsList = styled('main')`
 `;
 
 function createBoard({ userId }: { userId: string }): BoardListTypes {
-  const boardName = Date.now().toString();
+  const boardId = Date.now().toString();
   return {
-    [boardName]: {
-      id: boardName,
-      title: 'board1Name',
+    [boardId]: {
+      boardId,
+      title: boardId,
       description: 'description',
       order: 1,
       ancestors: {

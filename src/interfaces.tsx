@@ -72,7 +72,7 @@ export interface ChangeEmailArgsTypes {
 }
 
 export interface TaskTypes {
-  id: string;
+  taskId: string;
   title: string;
   description: string;
   order: number;
@@ -88,7 +88,7 @@ export interface ColumnDataTypes {
 }
 
 export interface ColumnTypes {
-  id: string;
+  columnId: string;
   title: string;
   description: string;
   order: number;
@@ -104,7 +104,7 @@ export interface BoardDataTypes {
 }
 
 export interface BoardTypes {
-  id: string;
+  boardId: string;
   title: string;
   description: string;
   order: number;
@@ -117,38 +117,3 @@ export interface BoardTypes {
 export interface BoardListTypes {
   [boardId: string]: BoardTypes;
 }
-
-/* export interface UserTypes {
-  [user: string]: {
-    [board: string]: {
-      [column: string]: {
-        [item: string]: {
-          title: string;
-          content: string
-        };
-      };
-    };
-  };
-} 
-
-
-{
-  "vasya": {
-    "board1": {
-      "column1": {
-        "str1": {
-          "name": "string",
-          "data": "ItemTypes"
-        },
-        "str2": {}
-      },
-      "column2": {}
-    },
-    "board2": {}
-  }
-}
-
-
-
-
-*/

@@ -29,11 +29,11 @@ export function createColumn({
   userId: string;
   boardId: string;
 }): BoardDataTypes {
-  const columnName = Date.now().toString();
+  const columnId = Date.now().toString();
   return {
-    [columnName]: {
-      id: columnName,
-      title: columnName,
+    [columnId]: {
+      columnId,
+      title: columnId,
       description: 'description1',
       order: 1,
       ancestors: {
@@ -77,10 +77,10 @@ function Board() {
         onClick={() => {
           addColumn({
             userId: board.ancestors.userId,
-            boardId: board.id,
+            boardId: board.boardId,
             data: createColumn({
               userId: board.ancestors.userId,
-              boardId: board.id,
+              boardId: board.boardId,
             }),
           });
         }}
