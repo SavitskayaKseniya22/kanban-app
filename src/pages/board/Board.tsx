@@ -2,16 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { RootState } from '../../store/store';
-import Column from './Column';
+
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
 import { BoardDataTypes } from '../../interfaces';
 import { useAddColumnMutation, useGetBoardQuery } from '../../store/kanban/kanbanApi';
+import BoardContent from './BoardContent';
 
 const StyledBoard = styled('main')`
   background: no-repeat bottom right/40% scroll url(${backBoardsPic});
-  gap: 1rem;
-  overflow-x: auto;
   position: relative;
 
   .board__button_add {
@@ -50,7 +50,7 @@ function Board() {
   const userId = useRef(activeUser!.localId).current;
   const { id } = useParams();
 
-  const { data: board, isError } = useGetBoardQuery(
+  const { data, isError } = useGetBoardQuery(
     { userId, boardId: id as string },
     { skip: !activeUser }
   );
@@ -66,21 +66,17 @@ function Board() {
 
   return (
     <StyledBoard>
-      {board &&
-        board.data &&
-        Array.from(Object.keys(board.data)).map((columnItemId) => (
-          <Column columnProp={board.data[columnItemId]} key={columnItemId + Date.now()} />
-        ))}
+      {data && <BoardContent data={data} />}
       <button
         type="button"
         className="board__button_add"
         onClick={() => {
           addColumn({
-            userId: board.ancestors.userId,
-            boardId: board.boardId,
+            userId,
+            boardId: id as string,
             data: createColumn({
-              userId: board.ancestors.userId,
-              boardId: board.boardId,
+              userId,
+              boardId: id as string,
             }),
           });
         }}

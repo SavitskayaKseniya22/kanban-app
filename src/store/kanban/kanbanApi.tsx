@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { toast } from 'react-toastify';
 import { replaceBoardsList, resetBoardsList } from './kanbanSlice';
-import { BoardDataTypes, BoardListTypes, ColumnDataTypes } from '../../interfaces';
+import { BoardDataTypes, BoardListTypes, BoardTypes, ColumnDataTypes } from '../../interfaces';
 
 export const kanbanApi = createApi({
   reducerPath: 'kanbanApi',
@@ -50,10 +50,19 @@ export const kanbanApi = createApi({
       }),
       providesTags: ['BOARD'],
 
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+      transformResponse: (response: BoardTypes) => {
+        if (!response.data) {
+          return [];
+        }
+        const { data } = response;
+        return Object.keys(data)
+          .map((column) => data[column])
+          .sort((a, b) => a.order - b.order);
+      },
+
+      async onQueryStarted(id, { queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          dispatch(replaceBoardsList(data));
+          await queryFulfilled;
           toast.success('You successfully got user board');
         } catch (err) {
           console.log(err);
@@ -236,6 +245,30 @@ export const kanbanApi = createApi({
         }
       },
     }),
+    replaceBoardContent: builder.mutation({
+      query: ({
+        userId,
+        boardId,
+        data,
+      }: {
+        userId: string;
+        boardId: string;
+        data: BoardDataTypes;
+      }) => ({
+        url: `${userId}/${boardId}/data/.json`,
+        method: 'PUT',
+        body: data,
+      }),
+
+      async onQueryStarted(attr, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success('You successfully refreshed board');
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
   }),
 });
 
@@ -249,4 +282,5 @@ export const {
   useDeleteColumnMutation,
   useDeleteTaskMutation,
   useReplaceColumnContentMutation,
+  useReplaceBoardContentMutation,
 } = kanbanApi;

@@ -24,8 +24,6 @@ function ColumnContent({ data }: { data: ColumnDataTypes }) {
   };
 
   const onDragEnd = (result: DropResult) => {
-    // превратить в массив.отсортировать.изменит индексы.отсортировать по новым индексам.
-
     if (!result.destination) {
       return;
     }
@@ -48,7 +46,7 @@ function ColumnContent({ data }: { data: ColumnDataTypes }) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId={`${Math.random()}24234`} direction="vertical">
+      <Droppable droppableId={`${Math.random()}`} direction="vertical" type="task">
         {(provided) => (
           <ul className="column__tasks" ref={provided.innerRef} {...provided.droppableProps}>
             {tasks.map((item, index) => (

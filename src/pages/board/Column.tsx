@@ -6,7 +6,7 @@ import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useAddTaskMutation, useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
 import ColumnContent from './ColumnContent';
 
-const StyledColumn = styled('div')`
+const StyledColumn = styled('li')`
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
