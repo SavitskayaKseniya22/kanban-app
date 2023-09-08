@@ -125,7 +125,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-      {data && <ColumnContent data={data} />}
+      {data && <ColumnContent columnProp={columnProp} />}
     </StyledColumn>
   );
 }
