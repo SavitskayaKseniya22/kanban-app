@@ -23,6 +23,7 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
   }, [data]);
 
   useEffect(() => {
+    // перенести,потому что срабатвает когда не должно
     if (columns.length > 0) {
       const { userId, boardId } = columns[0].ancestors;
       const obj: BoardDataTypes = {};
@@ -46,44 +47,99 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
   };
 
   const onDragEnd = (result: DropResult) => {
-    if (!result.destination) {
-      return;
-    }
+    const { type, destination, source } = result;
+    console.log(type, source.index, destination?.index);
+    if (columns.length > 0 && destination) {
+      if (type === 'column') {
+        const reorderedColumns = reorder(columns, source.index, destination.index) as ColumnTypes[];
+        setColumns(reorderedColumns);
+      } else if (type === 'task' && destination.droppableId === source.droppableId) {
+        const column = columns.filter((item) => item.columnId === source.droppableId)[0];
+        const { data } = column;
 
-    if (columns.length > 0 && result.type === 'column') {
-      const reorderedColumns = reorder(
-        columns,
-        result.source.index,
-        result.destination.index
-      ) as ColumnTypes[];
-      setColumns(reorderedColumns);
-    } else if (columns.length > 0 && result.type === 'task') {
-      const column = columns.filter((item) => item.columnId === result.source.droppableId)[0];
-      const { data } = column;
+        const tasks = Object.keys(data)
+          .map((task) => data[task])
+          .sort((a, b) => a.order - b.order);
 
-      const tasks = Object.keys(data)
-        .map((task) => data[task])
-        .sort((a, b) => a.order - b.order);
+        const reorderedTasks = reorder(tasks, source.index, destination.index) as TaskTypes[];
 
-      const reorderedTasks = reorder(
-        tasks,
-        result.source.index,
-        result.destination.index
-      ) as TaskTypes[];
+        const columnCopy = { ...column };
+        columnCopy.data = {};
 
-      const columnCopy = { ...column };
-      columnCopy.data = {};
+        reorderedTasks.forEach((item) => {
+          columnCopy.data[item.taskId] = item as TaskTypes;
+        });
 
-      reorderedTasks.forEach((item) => {
-        columnCopy.data[item.taskId] = item as TaskTypes;
-      });
+        const updatedColumns = columns
+          .filter((item) => item.columnId !== source.droppableId)
+          .concat(columnCopy)
+          .sort((a, b) => a.order - b.order);
 
-      const updatedColumns = columns
-        .filter((item) => item.columnId !== result.source.droppableId)
-        .concat(columnCopy)
-        .sort((a, b) => a.order - b.order);
+        setColumns(updatedColumns);
+      } else if (type === 'task' && destination.droppableId !== source.droppableId) {
+        // удалить таск из сорса
+        // реордер сорс
+        // добавить таск в дестинейшн
+        // реордер дестинейшн
+        // перезаписать
+        const sourceColumn = columns.filter((item) => item.columnId === source.droppableId)[0];
 
-      setColumns(updatedColumns);
+        const sourceTasks = Object.keys(sourceColumn.data || [])
+          .map((task) => sourceColumn.data[task])
+          .sort((a, b) => a.order - b.order);
+
+        const destinationColumn = columns.filter(
+          (item) => item.columnId === destination.droppableId
+        )[0];
+
+        const destinationTasks = Object.keys(destinationColumn.data || [])
+          .map((task) => destinationColumn.data[task])
+          .sort((a, b) => a.order - b.order);
+
+        const [elem] = sourceTasks.splice(source.index, 1);
+
+        destinationTasks.splice(destination.index, 0, {
+          ...elem,
+          ancestors: { ...elem.ancestors, columnId: destination.droppableId },
+        });
+
+        const reorderedSourceTasks = sourceTasks.map((item, index) => {
+          const copyItem = { ...item };
+          copyItem.order = index;
+          return copyItem;
+        });
+
+        const reorderedDestinationTasks = destinationTasks.map((item, index) => {
+          const copyItem = { ...item };
+          copyItem.order = index;
+          return copyItem;
+        });
+
+        const sourceColumnCopy = { ...sourceColumn };
+        sourceColumnCopy.data = {};
+
+        reorderedSourceTasks.forEach((item) => {
+          sourceColumnCopy.data[item.taskId] = item as TaskTypes;
+        });
+
+        const destinationColumnCopy = { ...destinationColumn };
+        destinationColumnCopy.data = {};
+
+        reorderedDestinationTasks.forEach((item) => {
+          destinationColumnCopy.data[item.taskId] = item as TaskTypes;
+        });
+
+        const updatedColumns = columns
+          .filter(
+            (item) =>
+              item.columnId !== source.droppableId && item.columnId !== destination.droppableId
+          )
+          .concat(sourceColumnCopy)
+          .concat(destinationColumnCopy)
+          .sort((a, b) => a.order - b.order);
+
+        setColumns(updatedColumns);
+      }
     }
   };
 

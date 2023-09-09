@@ -59,7 +59,6 @@ function Task({ taskProp }: { taskProp: TaskTypes }) {
         <button
           type="button"
           onClick={() => {
-            console.log('delete');
             deleteTask({ userId, boardId, columnId, taskId });
           }}
         >

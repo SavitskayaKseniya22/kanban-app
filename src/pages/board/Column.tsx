@@ -11,6 +11,7 @@ const StyledColumn = styled('li')`
   flex-direction: column;
   border-radius: 0.5rem;
   width: 350px;
+  height: 100%;
   padding: 0.5rem;
   gap: 1rem;
   background-color: rgba(230, 230, 230, 0.6);
@@ -78,7 +79,7 @@ export function createTask({
 }
 
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
-  const { title, description, data, columnId, ancestors } = columnProp;
+  const { title, description, columnId, ancestors } = columnProp;
   const { userId, boardId } = ancestors;
   const [addTask] = useAddTaskMutation();
   const [deleteColumn] = useDeleteColumnMutation();
@@ -125,7 +126,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-      {data && <ColumnContent columnProp={columnProp} />}
+      <ColumnContent columnProp={columnProp} />
     </StyledColumn>
   );
 }
