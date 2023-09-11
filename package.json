@@ -41,7 +41,7 @@
     "lint-fix": "eslint . --fix"
   },
   "lint-staged": {
-    "*src/*.{tsx,ts,test.tsx,json}": [
+    "*.{tsx,ts,test.tsx}": [
       "npm run prettier",
       "npm run lint",
       "npm run lint-fix"

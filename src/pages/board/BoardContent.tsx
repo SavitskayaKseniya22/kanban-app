@@ -22,19 +22,6 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
     setColumns(data);
   }, [data]);
 
-  useEffect(() => {
-    // перенести,потому что срабатвает когда не должно
-    if (columns.length > 0) {
-      const { userId, boardId } = columns[0].ancestors;
-      const obj: BoardDataTypes = {};
-      columns.forEach((item) => {
-        obj[item.columnId] = item as ColumnTypes;
-      });
-
-      replaceBoardContent({ userId, boardId, data: obj });
-    }
-  }, [columns, replaceBoardContent]);
-
   const reorder = (list: ColumnTypes[] | TaskTypes[], startIndex: number, endIndex: number) => {
     const result = [...list];
     const [removed] = result.splice(startIndex, 1);
@@ -48,7 +35,6 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
 
   const onDragEnd = (result: DropResult) => {
     const { type, destination, source } = result;
-    console.log(type, source.index, destination?.index);
     if (columns.length > 0 && destination) {
       if (type === 'column') {
         const reorderedColumns = reorder(columns, source.index, destination.index) as ColumnTypes[];
@@ -77,11 +63,6 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
 
         setColumns(updatedColumns);
       } else if (type === 'task' && destination.droppableId !== source.droppableId) {
-        // удалить таск из сорса
-        // реордер сорс
-        // добавить таск в дестинейшн
-        // реордер дестинейшн
-        // перезаписать
         const sourceColumn = columns.filter((item) => item.columnId === source.droppableId)[0];
 
         const sourceTasks = Object.keys(sourceColumn.data || [])
@@ -139,6 +120,15 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
           .sort((a, b) => a.order - b.order);
 
         setColumns(updatedColumns);
+      }
+      if (columns.length > 0) {
+        const { userId, boardId } = columns[0].ancestors;
+        const obj: BoardDataTypes = {};
+        columns.forEach((item) => {
+          obj[item.columnId] = item as ColumnTypes;
+        });
+
+        replaceBoardContent({ userId, boardId, data: obj });
       }
     }
   };
