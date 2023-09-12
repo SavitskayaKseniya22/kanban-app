@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 import { DropResult, DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { BoardDataTypes, ColumnTypes, TaskTypes } from '../../interfaces';
 import { useReplaceBoardContentMutation } from '../../store/kanban/kanbanApi';
@@ -18,9 +18,24 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
   const [columns, setColumns] = useState<ColumnTypes[]>(data);
   const [replaceBoardContent] = useReplaceBoardContentMutation();
 
+  const isReordered = useRef(false);
+
   useEffect(() => {
     setColumns(data);
   }, [data]);
+
+  useEffect(() => {
+    if (columns.length > 0 && isReordered) {
+      const { userId, boardId } = columns[0].ancestors;
+      const obj: BoardDataTypes = {};
+      columns.forEach((item) => {
+        obj[item.columnId] = item as ColumnTypes;
+      });
+
+      replaceBoardContent({ userId, boardId, data: obj });
+      isReordered.current = false;
+    }
+  }, [columns, replaceBoardContent]);
 
   const reorder = (list: ColumnTypes[] | TaskTypes[], startIndex: number, endIndex: number) => {
     const result = [...list];
@@ -121,15 +136,7 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
 
         setColumns(updatedColumns);
       }
-      if (columns.length > 0) {
-        const { userId, boardId } = columns[0].ancestors;
-        const obj: BoardDataTypes = {};
-        columns.forEach((item) => {
-          obj[item.columnId] = item as ColumnTypes;
-        });
-
-        replaceBoardContent({ userId, boardId, data: obj });
-      }
+      isReordered.current = true;
     }
   };
 

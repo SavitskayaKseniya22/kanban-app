@@ -25,7 +25,6 @@ export const StyledBoardItemShortCut = styled('div')`
     position: absolute;
     top: 0rem;
     right: 0rem;
-    gap: 2rem;
     font-size: 1.5rem;
     padding: 0.5rem;
   }
@@ -43,6 +42,14 @@ function BoardItemShortCut({ board }: { board: BoardTypes }) {
         <Link to={`${boardId}`}>
           <i className="fa-solid fa-up-right-from-square" />
         </Link>
+        <button
+          type="button"
+          onClick={() => {
+            console.log('edit');
+          }}
+        >
+          <i className="fa-solid fa-pen" />
+        </button>
         <button
           type="button"
           onClick={() => {
