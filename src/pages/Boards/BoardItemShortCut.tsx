@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { BoardTypes } from '../../interfaces';
 import { useDeleteBoardMutation } from '../../store/kanban/kanbanApi';
+import ModalContext from '../../context';
 
 export const StyledBoardItemShortCut = styled('div')`
   text-align: center;
@@ -33,6 +34,7 @@ export const StyledBoardItemShortCut = styled('div')`
 function BoardItemShortCut({ board }: { board: BoardTypes }) {
   const { title, description, boardId, ancestors } = board;
   const [deleteBoard] = useDeleteBoardMutation();
+  const modalContext = React.useContext(ModalContext);
 
   return (
     <StyledBoardItemShortCut data-id={boardId}>
@@ -45,7 +47,7 @@ function BoardItemShortCut({ board }: { board: BoardTypes }) {
         <button
           type="button"
           onClick={() => {
-            console.log('edit');
+            modalContext.setModalData({ type: 'editBoard', userId: ancestors.userId, boardId });
           }}
         >
           <i className="fa-solid fa-pen" />

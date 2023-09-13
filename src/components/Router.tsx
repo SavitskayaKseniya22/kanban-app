@@ -16,6 +16,7 @@ import { RootState } from '../store/store';
 import BoardsList from '../pages/boards/BoardsList';
 import Board from '../pages/board/Board';
 import { resetActiveUser } from '../store/auth/authSlice';
+import BoardWrapper from '../pages/boards/BoardWrapper';
 
 function isItExpired(loginTime: number, expiresIn: string) {
   return (Date.now() - loginTime) / 1000 > +expiresIn;
@@ -72,7 +73,14 @@ const router = createBrowserRouter(
           </Route>
         </Route>
         <Route element={<PrivateRoute />}>
-          <Route path="boards" element={<Outlet />}>
+          <Route
+            path="boards"
+            element={
+              <BoardWrapper>
+                <Outlet />
+              </BoardWrapper>
+            }
+          >
             <Route index element={<BoardsList />} />
             <Route path=":id" element={<Board />} />
           </Route>

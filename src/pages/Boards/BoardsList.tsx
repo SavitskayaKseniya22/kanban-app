@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -6,8 +6,8 @@ import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8
 import { useGetAllBoardsQuery } from '../../store/kanban/kanbanApi';
 import BoardItemShortCut, { StyledBoardItemShortCut } from './BoardItemShortCut';
 import { RootState } from '../../store/store';
-import Modal from '../../components/Modal';
-import CreateBoard from '../board/forms/CreateBoard';
+
+import ModalContext from '../../context';
 
 const StyledBoardsList = styled('main')`
   flex-wrap: wrap;
@@ -27,7 +27,7 @@ function BoardsList() {
   const { data } = useGetAllBoardsQuery(userId, { skip: !activeUser });
   const { t } = useTranslation();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalContext = React.useContext(ModalContext);
 
   return (
     <StyledBoardsList>
@@ -38,16 +38,11 @@ function BoardsList() {
       <StyledBoardItemShortCut
         className="board-list__create"
         onClick={() => {
-          setIsModalOpen(true);
+          modalContext.setModalData({ type: 'addBoard', userId });
         }}
       >
         <h3>{t('header.newBoard')}</h3>
       </StyledBoardItemShortCut>
-      {isModalOpen && (
-        <Modal>
-          <CreateBoard userId={userId} />
-        </Modal>
-      )}
     </StyledBoardsList>
   );
 }

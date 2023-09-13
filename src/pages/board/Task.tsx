@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { TaskTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useDeleteTaskMutation } from '../../store/kanban/kanbanApi';
+import ModalContext from '../../context';
 
 const StyledTask = styled('li')`
   display: flex;
@@ -39,6 +40,8 @@ function Task({ taskProp }: { taskProp: TaskTypes }) {
   const { title, description, ancestors, taskId } = taskProp;
   const { columnId, boardId, userId } = ancestors;
   const [deleteTask] = useDeleteTaskMutation();
+  const modalContext = React.useContext(ModalContext);
+
   return (
     <StyledTask>
       <div className="task__info">
@@ -50,7 +53,13 @@ function Task({ taskProp }: { taskProp: TaskTypes }) {
         <button
           type="button"
           onClick={() => {
-            console.log('edit');
+            modalContext.setModalData({
+              type: 'editTask',
+              userId,
+              boardId,
+              columnId,
+              taskId,
+            });
           }}
         >
           <i className="fa-solid fa-pen" />

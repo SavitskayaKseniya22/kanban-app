@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import styled from 'styled-components';
 import { ColumnDataTypes, ColumnTypes } from '../../interfaces';
@@ -77,10 +76,12 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <button
           type="button"
           onClick={() => {
-            /*
-            boardContext.setModalContent(
-              <EditColumn userId={userId} boardId={boardId} columnId={columnId} data={data} />
-            ); */
+            modalContext.setModalData({
+              type: 'editColumn',
+              userId,
+              boardId,
+              columnId,
+            });
           }}
         >
           <i className="fa-solid fa-pen" />

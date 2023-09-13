@@ -2,11 +2,12 @@ import { createContext } from 'react';
 import { ColumnTypes, TaskTypes } from './interfaces';
 
 export type ModalDataContextType = {
-  type: 'addColumn' | 'editColumn' | 'addTask' | 'editTask';
+  type: 'addColumn' | 'editColumn' | 'addTask' | 'editTask' | 'addBoard' | 'editBoard';
   userId: string | undefined;
   boardId?: string | undefined;
   columnId?: string | undefined;
-  data: TaskTypes[] | ColumnTypes[] | undefined;
+  taskId?: string | undefined;
+  data?: TaskTypes[] | ColumnTypes[] | undefined;
 };
 
 export type ModalContextType = {

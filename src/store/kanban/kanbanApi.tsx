@@ -119,6 +119,32 @@ export const kanbanApi = createApi({
         }
       },
     }),
+    editBoard: builder.mutation({
+      query: ({
+        userId,
+        boardId,
+        data,
+      }: {
+        userId: string;
+        boardId: string;
+
+        data: { title: string; description: string };
+      }) => ({
+        url: `${userId}/${boardId}.json`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['BOARDS'],
+
+      async onQueryStarted(id, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success('You successfully edited board');
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
     addColumn: builder.mutation({
       query: ({
         userId,
@@ -139,6 +165,33 @@ export const kanbanApi = createApi({
         try {
           await queryFulfilled;
           toast.success('You successfully added new column');
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
+    editColumn: builder.mutation({
+      query: ({
+        userId,
+        boardId,
+        columnId,
+        data,
+      }: {
+        userId: string;
+        boardId: string;
+        columnId: string;
+        data: { title: string; description: string };
+      }) => ({
+        url: `${userId}/${boardId}/data/${columnId}.json`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['BOARD'],
+
+      async onQueryStarted(id, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success('You successfully edited column');
         } catch (err) {
           console.log(err);
         }
@@ -189,6 +242,35 @@ export const kanbanApi = createApi({
         try {
           await queryFulfilled;
           toast.success('You successfully added new task');
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
+    editTask: builder.mutation({
+      query: ({
+        userId,
+        boardId,
+        columnId,
+        taskId,
+        data,
+      }: {
+        userId: string;
+        boardId: string;
+        taskId: string;
+        columnId: string;
+        data: { title: string; description: string };
+      }) => ({
+        url: `${userId}/${boardId}/data/${columnId}/data/${taskId}.json`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['BOARD'],
+
+      async onQueryStarted(id, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success('You successfully edited task');
         } catch (err) {
           console.log(err);
         }
@@ -263,7 +345,7 @@ export const kanbanApi = createApi({
       async onQueryStarted(attr, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully refreshed board');
+          toast.success('You successfully refreshed boards');
         } catch (err) {
           console.log(err);
         }
@@ -277,10 +359,13 @@ export const {
   useAddBoardMutation,
   useDeleteBoardMutation,
   useAddTaskMutation,
+  useEditTaskMutation,
   useAddColumnMutation,
   useGetBoardQuery,
   useDeleteColumnMutation,
   useDeleteTaskMutation,
   useReplaceColumnContentMutation,
   useReplaceBoardContentMutation,
+  useEditColumnMutation,
+  useEditBoardMutation,
 } = kanbanApi;

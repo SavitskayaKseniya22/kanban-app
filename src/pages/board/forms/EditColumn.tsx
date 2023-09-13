@@ -1,34 +1,36 @@
 import React from 'react';
-import { useAddBoardMutation } from '../../../store/kanban/kanbanApi';
 import EntityCreationForm from './EntityCreationForm';
+import { useEditColumnMutation } from '../../../store/kanban/kanbanApi';
 import ModalContext from '../../../context';
 
-function CreateBoard({ userId }: { userId: string }) {
-  const [addBoard] = useAddBoardMutation();
+function EditColumn({
+  userId,
+  boardId,
+  columnId,
+}: {
+  userId: string;
+  boardId: string;
+  columnId: string;
+}) {
+  const [editColumn] = useEditColumnMutation();
   const modalContext = React.useContext(ModalContext);
 
   const onSubmit = (title: string, description: string) => {
-    const boardId = Date.now().toString();
     if (title && description) {
-      addBoard({
+      editColumn({
         userId,
+        boardId,
+        columnId,
         data: {
-          [boardId]: {
-            boardId,
-            title,
-            description,
-            ancestors: {
-              userId,
-            },
-            data: {},
-          },
+          title,
+          description,
         },
       });
+
       modalContext.setModalData(undefined);
     }
   };
-
   return <EntityCreationForm onSubmitRef={onSubmit} />;
 }
 
-export default CreateBoard;
+export default EditColumn;
