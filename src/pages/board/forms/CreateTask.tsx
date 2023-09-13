@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useAddTaskMutation } from '../../../store/kanban/kanbanApi';
 import { TaskTypes } from '../../../interfaces';
-import EntityCreationForm, { FormValues } from './EntityCreationForm';
+import ModalContext from '../../../context';
+import EntityCreationForm from './EntityCreationForm';
 
 function CreateTask({
   userId,
@@ -12,16 +13,17 @@ function CreateTask({
   userId: string;
   boardId: string;
   columnId: string;
-  data: TaskTypes[] | undefined;
+  data: TaskTypes[];
 }) {
   const [addTask] = useAddTaskMutation();
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const dataRef = useRef<FormValues>({ title: '', description: '' });
+  const modalContext = React.useContext(ModalContext);
 
-  useEffect(() => {
+  const onSubmit = (title: string, description: string) => {
     const taskId = Date.now().toString();
-    const { title, description } = dataRef.current;
-    if (title && description && isSubmitted) {
+
+    const passedOrder = data[data.length - 1]?.order;
+
+    if (title && description) {
       addTask({
         userId,
         columnId,
@@ -31,7 +33,7 @@ function CreateTask({
             taskId,
             title,
             description,
-            order: (data?.at(-1)?.order || -1) + 1,
+            order: passedOrder >= 0 ? passedOrder + 1 : 0,
             ancestors: {
               columnId,
               boardId,
@@ -40,11 +42,12 @@ function CreateTask({
           },
         },
       });
-      setIsSubmitted(false);
-    }
-  }, [addTask, boardId, columnId, data, isSubmitted, userId]);
 
-  return <EntityCreationForm dataRef={dataRef} setIsSubmitted={setIsSubmitted} />;
+      modalContext.setModalData(undefined);
+    }
+  };
+
+  return <EntityCreationForm onSubmitRef={onSubmit} />;
 }
 
 export default CreateTask;

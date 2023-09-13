@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import styled from 'styled-components';
-
 import { ColumnDataTypes, ColumnTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
-import { useAddTaskMutation, useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
+import { useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
 import ColumnContent from './ColumnContent';
+import ModalContext from '../../context';
 
 const StyledColumn = styled('li')`
   display: flex;
@@ -52,44 +53,34 @@ const StyledColumn = styled('li')`
   }
 `;
 
-export function createTask({
-  userId,
-  boardId,
-  columnId,
-}: {
-  userId: string;
-  boardId: string;
-  columnId: string;
-}): ColumnDataTypes {
-  const taskId = Date.now().toString();
-
-  return {
-    [taskId]: {
-      taskId,
-      title: taskId,
-      description: 'string',
-      order: 1,
-      ancestors: {
-        columnId,
-        boardId,
-        userId,
-      },
-    },
-  };
+export function convertObjectToArray(object: ColumnDataTypes | undefined) {
+  return (
+    (object &&
+      Object.keys(object)
+        .map((item) => object[item])
+        .sort((a, b) => a.order - b.order)) ||
+    []
+  );
 }
 
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
-  const { title, description, columnId, ancestors } = columnProp;
+  const { title, description, columnId, ancestors, data } = columnProp;
   const { userId, boardId } = ancestors;
-  const [addTask] = useAddTaskMutation();
+
   const [deleteColumn] = useDeleteColumnMutation();
+
+  const modalContext = React.useContext(ModalContext);
+
   return (
     <StyledColumn>
       <div className="column__controls">
         <button
           type="button"
           onClick={() => {
-            console.log('edit');
+            /*
+            boardContext.setModalContent(
+              <EditColumn userId={userId} boardId={boardId} columnId={columnId} data={data} />
+            ); */
           }}
         >
           <i className="fa-solid fa-pen" />
@@ -106,15 +97,12 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <button
           type="button"
           onClick={() => {
-            addTask({
+            modalContext.setModalData({
+              type: 'addTask',
               userId,
-              columnId,
               boardId,
-              data: createTask({
-                userId,
-                columnId,
-                boardId,
-              }),
+              columnId,
+              data: convertObjectToArray(data),
             });
           }}
           className="column__controls_add"
@@ -126,7 +114,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-      <ColumnContent columnProp={columnProp} />
+      <ColumnContent data={convertObjectToArray(data)} columnId={columnId} />
     </StyledColumn>
   );
 }

@@ -25,7 +25,7 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
   }, [data]);
 
   useEffect(() => {
-    if (columns.length > 0 && isReordered) {
+    if (columns.length > 0 && isReordered.current) {
       const { userId, boardId } = columns[0].ancestors;
       const obj: BoardDataTypes = {};
       columns.forEach((item) => {

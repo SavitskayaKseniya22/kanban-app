@@ -107,7 +107,6 @@ export interface BoardTypes {
   boardId: string;
   title: string;
   description: string;
-  order: number;
   ancestors: {
     userId: string;
   };

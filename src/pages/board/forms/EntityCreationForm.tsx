@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -9,11 +8,9 @@ export type FormValues = {
 };
 
 function EntityCreationForm({
-  dataRef,
-  setIsSubmitted,
+  onSubmitRef,
 }: {
-  dataRef: React.MutableRefObject<FormValues>;
-  setIsSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+  onSubmitRef: (title: string, description: string) => void;
 }) {
   const {
     register,
@@ -24,10 +21,8 @@ function EntityCreationForm({
 
   const onSubmit: SubmitHandler<FormValues> = (formData) => {
     const { title, description } = formData;
-    if (title && description) {
-      dataRef.current = formData;
-      setIsSubmitted(true);
-    }
+
+    onSubmitRef(title, description);
   };
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const StyledModal = styled('div')`
@@ -18,7 +18,7 @@ const StyledModal = styled('div')`
   }
 `;
 
-function Modal({ children }: { children: ReactElement }) {
+function Modal({ children }: { children: string | JSX.Element | JSX.Element[] }) {
   return (
     <StyledModal>
       <div className="modal__content">{children}</div>

@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useAddColumnMutation } from '../../../store/kanban/kanbanApi';
 import { ColumnTypes } from '../../../interfaces';
-import EntityCreationForm, { FormValues } from './EntityCreationForm';
+import ModalContext from '../../../context';
+import EntityCreationForm from './EntityCreationForm';
 
 function CreateColumn({
   userId,
@@ -10,17 +11,16 @@ function CreateColumn({
 }: {
   userId: string;
   boardId: string;
-  data: ColumnTypes[] | undefined;
+  data: ColumnTypes[];
 }) {
   const [addColumn] = useAddColumnMutation();
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const dataRef = useRef<FormValues>({ title: '', description: '' });
 
-  useEffect(() => {
+  const modalContext = React.useContext(ModalContext);
+
+  const onSubmit = (title: string, description: string) => {
     const columnId = Date.now().toString();
-    const { title, description } = dataRef.current;
-
-    if (isSubmitted && title && description) {
+    const passedOrder = data[data.length - 1]?.order;
+    if (title && description) {
       addColumn({
         userId,
         boardId,
@@ -29,7 +29,7 @@ function CreateColumn({
             columnId,
             title,
             description,
-            order: (data?.at(-1)?.order || -1) + 1,
+            order: passedOrder >= 0 ? passedOrder + 1 : 0,
             ancestors: {
               boardId,
               userId,
@@ -38,11 +38,12 @@ function CreateColumn({
           },
         },
       });
-      setIsSubmitted(false);
-    }
-  }, [addColumn, boardId, data, isSubmitted, userId]);
 
-  return <EntityCreationForm dataRef={dataRef} setIsSubmitted={setIsSubmitted} />;
+      modalContext.setModalData(undefined);
+    }
+  };
+
+  return <EntityCreationForm onSubmitRef={onSubmit} />;
 }
 
 export default CreateColumn;
