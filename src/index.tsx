@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import './index.css';
@@ -6,13 +6,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './i18n';
 import { store } from './store/store';
+import Spinner from './components/Spinner';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Suspense fallback={<Spinner />}>
+        <App />
+      </Suspense>
     </Provider>
   </React.StrictMode>
 );

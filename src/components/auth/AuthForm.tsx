@@ -39,6 +39,14 @@ export const StyledInput = styled('input')`
   border-radius: 0.5rem;
 `;
 
+export const StyledButton = styled('button')`
+  ${StyledButtonDefault}
+  background-color:#ed4a44;
+  color: white;
+  flex-grow: 1;
+  text-align: center;
+`;
+
 export const StyledButtonList = styled('div')`
   display: flex;
   align-items: center;

@@ -1,17 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
+import ModalContext from '../context';
 
 const StyledModal = styled('div')`
-  min-width: 100px;
-  min-height: 100px;
-  position: absolute;
-  padding: 0.5rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(230, 230, 230, 0.6);
-  border-radius: 0.5rem;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  z-index: 99;
+
   .modal__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 1rem;
     border-radius: 0.5rem;
     background-color: #e5e5e5;
@@ -19,8 +21,15 @@ const StyledModal = styled('div')`
 `;
 
 function Modal({ children }: { children: string | JSX.Element | JSX.Element[] }) {
+  const modalContext = React.useContext(ModalContext);
   return (
-    <StyledModal>
+    <StyledModal
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          modalContext.setModalData(undefined);
+        }
+      }}
+    >
       <div className="modal__content">{children}</div>
     </StyledModal>
   );

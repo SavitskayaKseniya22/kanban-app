@@ -26,7 +26,7 @@ function Board() {
   const userId = useRef(activeUser!.localId).current;
   const { id } = useParams();
 
-  const { data, isError } = useGetBoardQuery(
+  const { data, isError, isSuccess } = useGetBoardQuery(
     { userId, boardId: id as string },
     { skip: !activeUser }
   );
@@ -42,7 +42,11 @@ function Board() {
 
   return (
     <StyledBoard>
-      {data && <BoardContent data={data} />}
+      {isSuccess && data && data.length ? (
+        <BoardContent data={data} />
+      ) : (
+        <span>The column has not been added. Please add a new column.</span>
+      )}
       <button
         type="button"
         className="board__button_add"

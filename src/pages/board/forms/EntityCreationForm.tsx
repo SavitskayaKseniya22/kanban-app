@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { StyledButton, StyledForm, StyledInput } from '../../../components/auth/AuthForm';
 
 export type FormValues = {
   title: string;
@@ -30,23 +31,23 @@ function EntityCreationForm({
   }, [isSubmitSuccessful, reset]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input
+    <StyledForm onSubmit={handleSubmit(onSubmit)}>
+      <StyledInput
         type="text"
         placeholder="title"
         {...register('title', {
           required: 'Please enter title',
         })}
       />
-      <input
+      <StyledInput
         type="text"
         placeholder="description"
         {...register('description', {
           required: 'Please enter description',
         })}
       />
-      <button type="submit">send</button>
-    </form>
+      <StyledButton type="submit">Send</StyledButton>
+    </StyledForm>
   );
 }
 

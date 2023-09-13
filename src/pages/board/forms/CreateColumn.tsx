@@ -14,7 +14,6 @@ function CreateColumn({
   data: ColumnTypes[];
 }) {
   const [addColumn] = useAddColumnMutation();
-
   const modalContext = React.useContext(ModalContext);
 
   const onSubmit = (title: string, description: string) => {
