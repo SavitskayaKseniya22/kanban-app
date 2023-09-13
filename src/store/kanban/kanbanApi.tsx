@@ -1,7 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { toast } from 'react-toastify';
-import { replaceBoardsList, resetBoardsList } from './kanbanSlice';
-import { BoardDataTypes, BoardListTypes, BoardTypes, ColumnDataTypes } from '../../interfaces';
+import {
+  BoardDataTypes,
+  BoardListTypes,
+  BoardTypes,
+  ColumnDataTypes,
+  KanbanErrorTypes,
+} from '../../interfaces';
+
+function handleKanbanErr(err: KanbanErrorTypes) {
+  const { data, originalStatus } = err.error;
+  toast.error(`${originalStatus}: ${data[0].toUpperCase()}${data.slice(1)}`);
+}
 
 export const kanbanApi = createApi({
   reducerPath: 'kanbanApi',
@@ -17,32 +27,37 @@ export const kanbanApi = createApi({
       }),
       providesTags: ['BOARDS'],
 
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(replaceBoardsList(data));
-          toast.success('You successfully got user board');
-        } catch (err) {
-          console.log(err);
-        }
-      },
-    }),
-    deleteAllBoards: builder.mutation({
-      query: ({ userId }: { userId: string }) => ({
-        url: `${userId}.json`,
-        method: 'DELETE',
-      }),
-
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+      async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          dispatch(resetBoardsList());
-          toast.success('You successfully deleted all board data');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
+    editAllBoard: builder.mutation({
+      query: ({
+        userId,
+        boardId,
+        data,
+      }: {
+        userId: string;
+        boardId: string;
+        data: BoardDataTypes;
+      }) => ({
+        url: `${userId}/${boardId}/data/.json`,
+        method: 'PUT',
+        body: data,
+      }),
+      async onQueryStarted(attr, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleKanbanErr(err as KanbanErrorTypes);
+        }
+      },
+    }),
+
     getBoard: builder.query({
       query: ({ userId, boardId }: { userId: string; boardId: string }) => ({
         url: `${userId}/${boardId}.json`,
@@ -63,42 +78,8 @@ export const kanbanApi = createApi({
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully got user board');
         } catch (err) {
-          console.log(err);
-        }
-      },
-    }),
-
-    deleteBoard: builder.mutation({
-      query: ({ userId, boardId }: { userId: string; boardId: string }) => ({
-        url: `${userId}/${boardId}.json`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['BOARDS'],
-      async onQueryStarted(attr, { queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          toast.success('You successfully deleted all board data');
-        } catch (err) {
-          console.log(err);
-        }
-      },
-    }),
-    replaceAllBoards: builder.mutation({
-      query: ({ userId, data }: { userId: string; data: BoardListTypes }) => ({
-        url: `${userId}.json`,
-        method: 'PUT',
-        body: data,
-      }),
-
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(replaceBoardsList(data));
-          toast.success('You successfully replaced all board data');
-        } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -109,13 +90,12 @@ export const kanbanApi = createApi({
         body: data,
       }),
       invalidatesTags: ['BOARDS'],
-
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully added new board data');
+          toast.success('You have successfully added a new board');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -127,7 +107,6 @@ export const kanbanApi = createApi({
       }: {
         userId: string;
         boardId: string;
-
         data: { title: string; description: string };
       }) => ({
         url: `${userId}/${boardId}.json`,
@@ -135,16 +114,31 @@ export const kanbanApi = createApi({
         body: data,
       }),
       invalidatesTags: ['BOARDS'],
-
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully edited board');
+          toast.success('You have successfully edited the board');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
+    deleteBoard: builder.mutation({
+      query: ({ userId, boardId }: { userId: string; boardId: string }) => ({
+        url: `${userId}/${boardId}.json`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['BOARDS'],
+      async onQueryStarted(attr, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success('You have successfully deleted all board data');
+        } catch (err) {
+          handleKanbanErr(err as KanbanErrorTypes);
+        }
+      },
+    }),
+
     addColumn: builder.mutation({
       query: ({
         userId,
@@ -160,13 +154,12 @@ export const kanbanApi = createApi({
         body: data,
       }),
       invalidatesTags: ['BOARD'],
-
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully added new column');
+          toast.success('You have successfully added a new column');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -187,13 +180,12 @@ export const kanbanApi = createApi({
         body: data,
       }),
       invalidatesTags: ['BOARD'],
-
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully edited column');
+          toast.success('You have successfully edited the column');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -214,9 +206,9 @@ export const kanbanApi = createApi({
       async onQueryStarted(attr, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully deleted column');
+          toast.success('You have successfully deleted the column');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -237,13 +229,12 @@ export const kanbanApi = createApi({
         body: data,
       }),
       invalidatesTags: ['BOARD'],
-
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully added new task');
+          toast.success('You have successfully added a new task');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -266,13 +257,12 @@ export const kanbanApi = createApi({
         body: data,
       }),
       invalidatesTags: ['BOARD'],
-
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully edited task');
+          toast.success('You have successfully edited the task');
         } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -295,59 +285,9 @@ export const kanbanApi = createApi({
       async onQueryStarted(attr, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You successfully deleted column');
+          toast.success('You have successfully deleted the column');
         } catch (err) {
-          console.log(err);
-        }
-      },
-    }),
-    replaceColumnContent: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        columnId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        columnId: string;
-        data: ColumnDataTypes;
-      }) => ({
-        url: `${userId}/${boardId}/data/${columnId}/data/.json`,
-        method: 'PUT',
-        body: data,
-      }),
-
-      async onQueryStarted(attr, { queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          toast.success('You successfully refreshed column');
-        } catch (err) {
-          console.log(err);
-        }
-      },
-    }),
-    replaceBoardContent: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        data: BoardDataTypes;
-      }) => ({
-        url: `${userId}/${boardId}/data/.json`,
-        method: 'PUT',
-        body: data,
-      }),
-
-      async onQueryStarted(attr, { queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          toast.success('You successfully refreshed boards');
-        } catch (err) {
-          console.log(err);
+          handleKanbanErr(err as KanbanErrorTypes);
         }
       },
     }),
@@ -364,8 +304,7 @@ export const {
   useGetBoardQuery,
   useDeleteColumnMutation,
   useDeleteTaskMutation,
-  useReplaceColumnContentMutation,
-  useReplaceBoardContentMutation,
+  useEditAllBoardMutation,
   useEditColumnMutation,
   useEditBoardMutation,
 } = kanbanApi;

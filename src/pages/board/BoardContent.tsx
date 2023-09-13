@@ -4,8 +4,8 @@ import { DropResult, DragDropContext, Droppable, Draggable } from '@hello-pangea
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { BoardDataTypes, ColumnTypes, TaskTypes } from '../../interfaces';
-import { useReplaceBoardContentMutation } from '../../store/kanban/kanbanApi';
 import Column from './Column';
+import { useEditAllBoardMutation } from '../../store/kanban/kanbanApi';
 
 const StyledBoardContent = styled('ul')`
   display: flex;
@@ -16,7 +16,7 @@ const StyledBoardContent = styled('ul')`
 
 function BoardContent({ data }: { data: ColumnTypes[] }) {
   const [columns, setColumns] = useState<ColumnTypes[]>(data);
-  const [replaceBoardContent] = useReplaceBoardContentMutation();
+  const [editAllBoard] = useEditAllBoardMutation();
 
   const isReordered = useRef(false);
 
@@ -32,10 +32,10 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
         obj[item.columnId] = item as ColumnTypes;
       });
 
-      replaceBoardContent({ userId, boardId, data: obj });
+      editAllBoard({ userId, boardId, data: obj });
       isReordered.current = false;
     }
-  }, [columns, replaceBoardContent]);
+  }, [columns, editAllBoard]);
 
   const reorder = (list: ColumnTypes[] | TaskTypes[], startIndex: number, endIndex: number) => {
     const result = [...list];

@@ -12,6 +12,20 @@ export interface AuthErrorTypes {
   };
 }
 
+export interface KanbanErrorTypes {
+  error: {
+    status: string;
+    originalStatus: number;
+    data: string;
+    error: string;
+  };
+  isUnhandledError: boolean;
+  meta: {
+    request: {};
+    response: {};
+  };
+}
+
 export interface ActiveUserDataTypes {
   localId: string;
   email: string;

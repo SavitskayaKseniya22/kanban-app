@@ -14,7 +14,6 @@ import {
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 import userReducer from './auth/authSlice';
-import kanbanReducer from './kanban/kanbanSlice';
 import { authApi } from './auth/authApi';
 import { kanbanApi } from './kanban/kanbanApi';
 
@@ -27,7 +26,6 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     user: userReducer,
-    kanban: kanbanReducer,
   })
 );
 
