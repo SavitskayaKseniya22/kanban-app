@@ -11,13 +11,14 @@ const StyledFooter = styled('footer')`
   background-color: #7953f5;
   color: white;
   gap: 1rem;
+
   a {
-    display: block;
+    display: flex;
     width: 60px;
     height: 20px;
+
     img {
       width: 100%;
-      height: 100%;
     }
   }
 `;

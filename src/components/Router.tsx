@@ -84,7 +84,6 @@ const router = createBrowserRouter(
             <Route index element={<BoardsList />} />
             <Route path=":id" element={<Board />} />
           </Route>
-          <Route path="profile" element="<div>profile</div>" />
         </Route>
         <Route path="*" element="<div>404</div>" />
       </Route>

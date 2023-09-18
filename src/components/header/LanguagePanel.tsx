@@ -7,9 +7,7 @@ import { useForm } from 'react-hook-form';
 
 const StyledLanguagePanel = styled('form')`
   display: flex;
-  flex-grow: 0;
-  justify-content: right;
-  box-sizing: border-box;
+  margin: 0 auto 0 10rem;
 
   input {
     display: none;
@@ -27,7 +25,6 @@ const StyledLanguagePanel = styled('form')`
     position: relative;
     overflow: visible;
     font-weight: 400;
-    height: 38px;
     transition: 0.5s;
   }
 
@@ -43,7 +40,6 @@ const StyledLanguagePanel = styled('form')`
     color: white;
     transition: 0.5s;
     z-index: 1;
-    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;

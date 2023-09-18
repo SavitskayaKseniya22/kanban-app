@@ -2,13 +2,13 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { Form, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
 import { Id, toast } from 'react-toastify';
 import { useSignInMutation, useSignUpMutation } from '../../store/auth/authApi';
-import { StyledButtonDefault } from '../../styledComponents/SharedStyles';
 import backAuthPic from '../../assets/images/png/image_processing.png';
+import { StyledForm, StyledInput, StyledButtonList } from '../../styledComponents/SharedStyles';
 
 const StyledAuthPage = styled('main')`
   align-items: center;
@@ -16,54 +16,7 @@ const StyledAuthPage = styled('main')`
   background: no-repeat bottom right/40% scroll url(${backAuthPic});
 `;
 
-export const StyledForm = styled(Form)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: rgba(230, 230, 230, 0.6);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  gap: 2rem;
-  width: 300px;
-  & > * {
-    width: 100%;
-  }
-`;
-
-export const StyledInput = styled('input')`
-  padding: 0.5rem;
-  color: black;
-  border: none;
-  outline: none;
-  text-align: center;
-  border-radius: 0.5rem;
-`;
-
-export const StyledButton = styled('button')`
-  ${StyledButtonDefault}
-  background-color:#ed4a44;
-  color: white;
-  flex-grow: 1;
-  text-align: center;
-`;
-
-export const StyledButtonList = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  & > * {
-    ${StyledButtonDefault}
-    background-color:#7953f5;
-    color: white;
-    flex-grow: 1;
-    text-align: center;
-  }
-  .login__submit {
-    background-color: #ed4a44;
-  }
-`;
-
-export function AuthForm({ formType }: { formType: string }) {
+export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
   const {
     register,
     handleSubmit,
@@ -114,7 +67,7 @@ export function AuthForm({ formType }: { formType: string }) {
     const { email, password } = formData;
     if (formType === 'login') {
       signIn({ email, password });
-    } else if (formType === 'registration') {
+    } else {
       signUp({ email, password })
         .unwrap()
         .then(() => {
@@ -163,8 +116,11 @@ export function AuthForm({ formType }: { formType: string }) {
           <button type="submit" className="login__submit">
             Enter
           </button>
-          {formType === 'login' && <NavLink to="/auth/registration">Registration</NavLink>}
-          {formType === 'registration' && <NavLink to="/auth/login">Login</NavLink>}
+          {formType === 'login' ? (
+            <NavLink to="/auth/registration">Registration</NavLink>
+          ) : (
+            <NavLink to="/auth/login">Login</NavLink>
+          )}
         </StyledButtonList>
       </StyledForm>
     </StyledAuthPage>

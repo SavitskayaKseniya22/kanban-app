@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StyledButton, StyledForm, StyledInput } from '../../../components/auth/AuthForm';
+import { StyledForm, StyledInput, StyledButton } from '../../../styledComponents/SharedStyles';
 
 export type FormValues = {
   title: string;

@@ -8,9 +8,13 @@ import {
   KanbanErrorTypes,
 } from '../../interfaces';
 
-function handleKanbanErr(err: KanbanErrorTypes) {
-  const { data, originalStatus } = err.error;
-  toast.error(`${originalStatus}: ${data[0].toUpperCase()}${data.slice(1)}`);
+function handleKanbanErr(err: KanbanErrorTypes | null) {
+  if (err !== null && 'data' in err) {
+    const { data, originalStatus } = err.error;
+    toast.error(`${originalStatus}: ${data[0].toUpperCase()}${data.slice(1)}`);
+  } else {
+    toast.error(`${404}: No data`);
+  }
 }
 
 export const kanbanApi = createApi({
@@ -66,8 +70,8 @@ export const kanbanApi = createApi({
       providesTags: ['BOARD'],
 
       transformResponse: (response: BoardTypes) => {
-        if (!response.data) {
-          return [];
+        if (!response || !response.data) {
+          throw new Error('tt');
         }
         const { data } = response;
         return Object.keys(data)
@@ -132,7 +136,7 @@ export const kanbanApi = createApi({
       async onQueryStarted(attr, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully deleted all board data');
+          toast.success('You have successfully deleted all boards');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes);
         }

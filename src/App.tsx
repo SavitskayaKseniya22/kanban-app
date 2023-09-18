@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const StyledToastContainer = styled(ToastContainer)`
   position: absolute;
+  bottom: 2em;
 `;
 
 function App() {
