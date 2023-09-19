@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { toast } from 'react-toastify';
 import ModalContext from '../context';
 
 const StyledModal = styled('div')`
@@ -27,6 +28,7 @@ function Modal({ children }: { children: string | JSX.Element | JSX.Element[] })
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           modalContext.setModalData(undefined);
+          toast.dismiss();
         }
       }}
     >
