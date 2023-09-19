@@ -12,6 +12,7 @@ const StyledBoardContent = styled('ul')`
   justify-content: flex-start;
   gap: 1rem;
   overflow-x: auto;
+  width: 100%;
 `;
 
 function BoardContent({ data }: { data: ColumnTypes[] }) {
@@ -55,88 +56,88 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
         const reorderedColumns = reorder(columns, source.index, destination.index) as ColumnTypes[];
         setColumns(reorderedColumns);
       } else if (type === 'task' && destination.droppableId === source.droppableId) {
-        const column = columns.filter((item) => item.columnId === source.droppableId)[0];
-        const { data } = column;
+        const column = columns.find((item) => item.columnId === source.droppableId);
+        if (column) {
+          const { data } = column;
 
-        const tasks = Object.keys(data)
-          .map((task) => data[task])
-          .sort((a, b) => a.order - b.order);
+          const tasks = Object.keys(data)
+            .map((task) => data[task])
+            .sort((a, b) => a.order - b.order);
 
-        const reorderedTasks = reorder(tasks, source.index, destination.index) as TaskTypes[];
+          const reorderedTasks = reorder(tasks, source.index, destination.index) as TaskTypes[];
 
-        const columnCopy = { ...column };
-        columnCopy.data = {};
+          const columnCopy = { ...column };
+          columnCopy.data = {};
 
-        reorderedTasks.forEach((item) => {
-          columnCopy.data[item.taskId] = item as TaskTypes;
-        });
+          reorderedTasks.forEach((item) => {
+            columnCopy.data[item.taskId] = item as TaskTypes;
+          });
 
-        const updatedColumns = columns
-          .filter((item) => item.columnId !== source.droppableId)
-          .concat(columnCopy)
-          .sort((a, b) => a.order - b.order);
+          const updatedColumns = columns
+            .filter((item) => item.columnId !== source.droppableId)
+            .concat(columnCopy)
+            .sort((a, b) => a.order - b.order);
 
-        setColumns(updatedColumns);
+          setColumns(updatedColumns);
+        }
       } else if (type === 'task' && destination.droppableId !== source.droppableId) {
-        const sourceColumn = columns.filter((item) => item.columnId === source.droppableId)[0];
+        const sourceColumn = columns.find((item) => item.columnId === source.droppableId);
+        const destinationColumn = columns.find((item) => item.columnId === destination.droppableId);
+        if (sourceColumn && destinationColumn) {
+          const sourceTasks = Object.keys(sourceColumn.data || [])
+            .map((task) => sourceColumn.data[task])
+            .sort((a, b) => a.order - b.order);
 
-        const sourceTasks = Object.keys(sourceColumn.data || [])
-          .map((task) => sourceColumn.data[task])
-          .sort((a, b) => a.order - b.order);
+          const destinationTasks = Object.keys(destinationColumn.data || [])
+            .map((task) => destinationColumn.data[task])
+            .sort((a, b) => a.order - b.order);
 
-        const destinationColumn = columns.filter(
-          (item) => item.columnId === destination.droppableId
-        )[0];
+          const [elem] = sourceTasks.splice(source.index, 1);
 
-        const destinationTasks = Object.keys(destinationColumn.data || [])
-          .map((task) => destinationColumn.data[task])
-          .sort((a, b) => a.order - b.order);
+          destinationTasks.splice(destination.index, 0, {
+            ...elem,
+            ancestors: { ...elem.ancestors, columnId: destination.droppableId },
+          });
 
-        const [elem] = sourceTasks.splice(source.index, 1);
+          const reorderedSourceTasks = sourceTasks.map((item, index) => {
+            const copyItem = { ...item };
+            copyItem.order = index;
+            return copyItem;
+          });
 
-        destinationTasks.splice(destination.index, 0, {
-          ...elem,
-          ancestors: { ...elem.ancestors, columnId: destination.droppableId },
-        });
+          const reorderedDestinationTasks = destinationTasks.map((item, index) => {
+            const copyItem = { ...item };
+            copyItem.order = index;
+            return copyItem;
+          });
 
-        const reorderedSourceTasks = sourceTasks.map((item, index) => {
-          const copyItem = { ...item };
-          copyItem.order = index;
-          return copyItem;
-        });
+          const sourceColumnCopy = { ...sourceColumn };
+          sourceColumnCopy.data = {};
 
-        const reorderedDestinationTasks = destinationTasks.map((item, index) => {
-          const copyItem = { ...item };
-          copyItem.order = index;
-          return copyItem;
-        });
+          reorderedSourceTasks.forEach((item) => {
+            sourceColumnCopy.data[item.taskId] = item as TaskTypes;
+          });
 
-        const sourceColumnCopy = { ...sourceColumn };
-        sourceColumnCopy.data = {};
+          const destinationColumnCopy = { ...destinationColumn };
+          destinationColumnCopy.data = {};
 
-        reorderedSourceTasks.forEach((item) => {
-          sourceColumnCopy.data[item.taskId] = item as TaskTypes;
-        });
+          reorderedDestinationTasks.forEach((item) => {
+            destinationColumnCopy.data[item.taskId] = item as TaskTypes;
+          });
 
-        const destinationColumnCopy = { ...destinationColumn };
-        destinationColumnCopy.data = {};
+          const updatedColumns = columns
+            .filter(
+              (item) =>
+                item.columnId !== source.droppableId && item.columnId !== destination.droppableId
+            )
+            .concat(sourceColumnCopy)
+            .concat(destinationColumnCopy)
+            .sort((a, b) => a.order - b.order);
 
-        reorderedDestinationTasks.forEach((item) => {
-          destinationColumnCopy.data[item.taskId] = item as TaskTypes;
-        });
-
-        const updatedColumns = columns
-          .filter(
-            (item) =>
-              item.columnId !== source.droppableId && item.columnId !== destination.droppableId
-          )
-          .concat(sourceColumnCopy)
-          .concat(destinationColumnCopy)
-          .sort((a, b) => a.order - b.order);
-
-        setColumns(updatedColumns);
+          setColumns(updatedColumns);
+        }
+        isReordered.current = true;
       }
-      isReordered.current = true;
     }
   };
 
@@ -155,7 +156,7 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <Column columnProp={column} key={columnId + Date.now()} />
+                      <Column columnProp={column} key={columnId} />
                     </div>
                   )}
                 </Draggable>

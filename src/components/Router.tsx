@@ -54,7 +54,12 @@ function PrivateAuthRoute() {
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" errorElement="<div>error</div>" id="root" element={<Outlet />}>
+    <Route
+      path="/"
+      errorElement="<div>Something went wrong. Please reload the page.</div>"
+      id="root"
+      element={<Outlet />}
+    >
       <Route
         element={
           <>

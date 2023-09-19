@@ -12,6 +12,7 @@ import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8
 const StyledBoard = styled('main')`
   background: no-repeat bottom right/40% scroll url(${backBoardsPic});
   position: relative;
+  justify-content: center;
 
   .board__button_add {
     position: absolute;
@@ -19,17 +20,18 @@ const StyledBoard = styled('main')`
     right: 2rem;
     font-size: 3rem;
   }
+  span {
+    align-self: center;
+  }
 `;
 
 function Board() {
   const { activeUser } = useSelector((state: RootState) => state.persist.user);
   const userId = useRef(activeUser!.localId).current;
   const { id } = useParams();
+  const boardId = useRef(id || '').current;
 
-  const { data, isError, isSuccess } = useGetBoardQuery(
-    { userId, boardId: id as string },
-    { skip: !activeUser }
-  );
+  const { data, isError, isSuccess } = useGetBoardQuery({ userId, boardId }, { skip: !activeUser });
 
   const navigate = useNavigate();
   const modalContext = React.useContext(ModalContext);
@@ -51,9 +53,7 @@ function Board() {
         type="button"
         className="board__button_add"
         onClick={() => {
-          if (id) {
-            modalContext.setModalData({ type: 'addColumn', userId, boardId: id, data });
-          }
+          modalContext.setModalData({ type: 'addColumn', userId, boardId, data });
         }}
       >
         <i className="fa-solid fa-plus" />

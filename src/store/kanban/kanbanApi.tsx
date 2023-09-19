@@ -31,6 +31,9 @@ export const kanbanApi = createApi({
       }),
       providesTags: ['BOARDS'],
 
+      transformResponse: (response: BoardListTypes) =>
+        response ? Object.keys(response).map((board) => response[board]) : [],
+
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -70,13 +73,15 @@ export const kanbanApi = createApi({
       providesTags: ['BOARD'],
 
       transformResponse: (response: BoardTypes) => {
-        if (!response || !response.data) {
-          throw new Error('tt');
+        if (response === null) {
+          throw new Error('No data found');
         }
         const { data } = response;
-        return Object.keys(data)
-          .map((column) => data[column])
-          .sort((a, b) => a.order - b.order);
+        return data
+          ? Object.keys(data)
+              .map((column) => data[column])
+              .sort((a, b) => a.order - b.order)
+          : [];
       },
 
       async onQueryStarted(id, { queryFulfilled }) {
