@@ -48,8 +48,8 @@ export const kanbanApi = createApi({
       },
     }),
     editAllBoard: builder.mutation({
-      query: ({ userId, boardId, data }: UserId & BoardId & { data: BoardDataTypes }) => ({
-        url: `${userId}/${boardId}/data/.json`,
+      query: ({ ids, data }: { ids: UserId & BoardId } & { data: BoardDataTypes }) => ({
+        url: `${ids.userId}/${ids.boardId}/data/.json`,
         method: 'PUT',
         body: data,
       }),

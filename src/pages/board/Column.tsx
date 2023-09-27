@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ColumnDataTypes, ColumnTypes } from '../../interfaces';
+import { ColumnTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
 import ColumnContent from './ColumnContent';
 import ModalContext from '../../context';
+import { objectToArray } from '../../utils';
 
 const StyledColumn = styled('li')`
   display: flex;
@@ -51,16 +52,6 @@ const StyledColumn = styled('li')`
     }
   }
 `;
-
-export function convertObjectToArray(object: ColumnDataTypes | undefined) {
-  return (
-    (object &&
-      Object.keys(object)
-        .map((item) => object[item])
-        .sort((a, b) => a.order - b.order)) ||
-    []
-  );
-}
 
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
   const { title, description, id: columnId, ancestors, data } = columnProp;
@@ -111,7 +102,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
-      <ColumnContent data={convertObjectToArray(data)} columnId={columnId} />
+      <ColumnContent data={objectToArray(data)} columnId={columnId} />
     </StyledColumn>
   );
 }
