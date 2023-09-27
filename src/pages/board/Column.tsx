@@ -63,8 +63,7 @@ export function convertObjectToArray(object: ColumnDataTypes | undefined) {
 }
 
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
-  const { title, description, columnId, ancestors, data } = columnProp;
-  const { userId, boardId } = ancestors;
+  const { title, description, id: columnId, ancestors, data } = columnProp;
 
   const [deleteColumn] = useDeleteColumnMutation();
 
@@ -78,8 +77,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
           onClick={() => {
             modalContext.setModalData({
               type: 'editColumn',
-              userId,
-              boardId,
+              ...ancestors,
               columnId,
             });
           }}
@@ -89,7 +87,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <button
           type="button"
           onClick={() => {
-            deleteColumn({ userId, columnId, boardId });
+            deleteColumn({ ...ancestors, columnId });
           }}
           className="column__controls_delete"
         >
@@ -100,10 +98,8 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
           onClick={() => {
             modalContext.setModalData({
               type: 'addTask',
-              userId,
-              boardId,
+              ...ancestors,
               columnId,
-              data: convertObjectToArray(data),
             });
           }}
           className="column__controls_add"

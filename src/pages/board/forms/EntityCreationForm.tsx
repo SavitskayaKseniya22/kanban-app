@@ -5,24 +5,16 @@ import { useTranslation } from 'react-i18next';
 import { Id, toast } from 'react-toastify';
 import { ErrorMessage } from '@hookform/error-message';
 import { StyledForm, StyledInput, StyledButton } from '../../../styledComponents/SharedStyles';
+import { BasicEntityInfo } from '../../../interfaces';
 
-export type FormValues = {
-  title: string;
-  description: string;
-};
-
-function EntityCreationForm({
-  onSubmitRef,
-}: {
-  onSubmitRef: (title: string, description: string) => void;
-}) {
+function EntityCreationForm({ onSubmitRef }: { onSubmitRef: (prop: BasicEntityInfo) => void }) {
   const { t } = useTranslation();
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitSuccessful, errors },
-  } = useForm<FormValues>({
+  } = useForm<BasicEntityInfo>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     criteriaMode: 'all',
@@ -33,7 +25,7 @@ function EntityCreationForm({
 
   useEffect(() => {
     if (titleToastId.current) {
-      toast.dismiss(titleToastId.current as Id);
+      toast.dismiss(titleToastId.current);
     }
     if (errors.title) {
       titleToastId.current = toast.warn(
@@ -47,7 +39,7 @@ function EntityCreationForm({
 
   useEffect(() => {
     if (descriptionToastId.current) {
-      toast.dismiss(descriptionToastId.current as Id);
+      toast.dismiss(descriptionToastId.current);
     }
     if (errors.description) {
       descriptionToastId.current = toast.warn(
@@ -63,10 +55,8 @@ function EntityCreationForm({
     }
   }, [errors, errors.description]);
 
-  const onSubmit: SubmitHandler<FormValues> = (formData) => {
-    const { title, description } = formData;
-
-    onSubmitRef(title, description);
+  const onSubmit: SubmitHandler<BasicEntityInfo> = (formData) => {
+    onSubmitRef(formData);
   };
 
   useEffect(() => {

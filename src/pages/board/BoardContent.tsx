@@ -26,11 +26,11 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
   }, [data]);
 
   useEffect(() => {
-    if (columns.length > 0 && isReordered.current) {
+    if (isReordered.current) {
       const { userId, boardId } = columns[0].ancestors;
       const obj: BoardDataTypes = {};
-      columns.forEach((item) => {
-        obj[item.columnId] = item as ColumnTypes;
+      columns.forEach((column) => {
+        obj[column.id] = column;
       });
 
       editAllBoard({ userId, boardId, data: obj });
@@ -51,12 +51,16 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
 
   const onDragEnd = (result: DropResult) => {
     const { type, destination, source } = result;
-    if (columns.length > 0 && destination) {
-      if (type === 'column') {
+    if (destination) {
+      if (type === 'column' && destination.index !== source.index) {
         const reorderedColumns = reorder(columns, source.index, destination.index) as ColumnTypes[];
         setColumns(reorderedColumns);
-      } else if (type === 'task' && destination.droppableId === source.droppableId) {
-        const column = columns.find((item) => item.columnId === source.droppableId);
+      } else if (
+        type === 'task' &&
+        destination.droppableId === source.droppableId &&
+        destination.index !== source.index
+      ) {
+        const column = columns.find((column) => column.id === source.droppableId);
         if (column) {
           const { data } = column;
 
@@ -69,20 +73,20 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
           const columnCopy = { ...column };
           columnCopy.data = {};
 
-          reorderedTasks.forEach((item) => {
-            columnCopy.data[item.taskId] = item as TaskTypes;
+          reorderedTasks.forEach((task) => {
+            columnCopy.data[task.id] = task;
           });
 
           const updatedColumns = columns
-            .filter((item) => item.columnId !== source.droppableId)
+            .filter((column) => column.id !== source.droppableId)
             .concat(columnCopy)
             .sort((a, b) => a.order - b.order);
 
           setColumns(updatedColumns);
         }
       } else if (type === 'task' && destination.droppableId !== source.droppableId) {
-        const sourceColumn = columns.find((item) => item.columnId === source.droppableId);
-        const destinationColumn = columns.find((item) => item.columnId === destination.droppableId);
+        const sourceColumn = columns.find((column) => column.id === source.droppableId);
+        const destinationColumn = columns.find((column) => column.id === destination.droppableId);
         if (sourceColumn && destinationColumn) {
           const sourceTasks = Object.keys(sourceColumn.data || [])
             .map((task) => sourceColumn.data[task])
@@ -103,32 +107,31 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
             const copyItem = { ...item };
             copyItem.order = index;
             return copyItem;
-          });
+          }) as TaskTypes[];
 
           const reorderedDestinationTasks = destinationTasks.map((item, index) => {
             const copyItem = { ...item };
             copyItem.order = index;
             return copyItem;
-          });
+          }) as TaskTypes[];
 
           const sourceColumnCopy = { ...sourceColumn };
           sourceColumnCopy.data = {};
 
-          reorderedSourceTasks.forEach((item) => {
-            sourceColumnCopy.data[item.taskId] = item as TaskTypes;
+          reorderedSourceTasks.forEach((task) => {
+            sourceColumnCopy.data[task.id] = task;
           });
 
           const destinationColumnCopy = { ...destinationColumn };
           destinationColumnCopy.data = {};
 
-          reorderedDestinationTasks.forEach((item) => {
-            destinationColumnCopy.data[item.taskId] = item as TaskTypes;
+          reorderedDestinationTasks.forEach((task) => {
+            destinationColumnCopy.data[task.id] = task;
           });
 
           const updatedColumns = columns
             .filter(
-              (item) =>
-                item.columnId !== source.droppableId && item.columnId !== destination.droppableId
+              (column) => column.id !== source.droppableId && column.id !== destination.droppableId
             )
             .concat(sourceColumnCopy)
             .concat(destinationColumnCopy)
@@ -136,8 +139,8 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
 
           setColumns(updatedColumns);
         }
-        isReordered.current = true;
       }
+      isReordered.current = true;
     }
   };
 
@@ -147,16 +150,16 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
         {(provided) => (
           <StyledBoardContent ref={provided.innerRef} {...provided.droppableProps}>
             {columns.map((column, index) => {
-              const { columnId } = column;
+              const { id } = column;
               return (
-                <Draggable key={columnId} draggableId={columnId} index={index}>
+                <Draggable key={id} draggableId={id} index={index}>
                   {(provided) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <Column columnProp={column} key={columnId} />
+                      <Column columnProp={column} key={id} />
                     </div>
                   )}
                 </Draggable>

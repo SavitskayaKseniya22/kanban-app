@@ -1,45 +1,29 @@
 import React from 'react';
 import { useAddColumnMutation } from '../../../store/kanban/kanbanApi';
-import { ColumnTypes } from '../../../interfaces';
+import { BasicEntityInfo, BoardId, UserId } from '../../../interfaces';
 import ModalContext from '../../../context';
 import EntityCreationForm from './EntityCreationForm';
 
-function CreateColumn({
-  userId,
-  boardId,
-  data,
-}: {
-  userId: string;
-  boardId: string;
-  data: ColumnTypes[];
-}) {
+function CreateColumn({ ids }: { ids: UserId & BoardId }) {
   const [addColumn] = useAddColumnMutation();
   const modalContext = React.useContext(ModalContext);
 
-  const onSubmit = (title: string, description: string) => {
-    const columnId = Date.now().toString();
-    const passedOrder = data[data.length - 1]?.order;
-    if (title && description) {
-      addColumn({
-        userId,
-        boardId,
-        data: {
-          [columnId]: {
-            columnId,
-            title,
-            description,
-            order: passedOrder >= 0 ? passedOrder + 1 : 0,
-            ancestors: {
-              boardId,
-              userId,
-            },
-            data: {},
-          },
+  const onSubmit = (formData: BasicEntityInfo) => {
+    const id = Date.now().toString();
+    addColumn({
+      ids,
+      data: {
+        [id]: {
+          id,
+          order: +id,
+          ancestors: ids,
+          data: {},
+          ...formData,
         },
-      });
+      },
+    });
 
-      modalContext.setModalData(undefined);
-    }
+    modalContext.setModalData(undefined);
   };
 
   return <EntityCreationForm onSubmitRef={onSubmit} />;

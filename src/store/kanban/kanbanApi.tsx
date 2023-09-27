@@ -1,11 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { toast } from 'react-toastify';
 import {
+  BasicEntityInfo,
   BoardDataTypes,
+  BoardId,
   BoardListTypes,
   BoardTypes,
   ColumnDataTypes,
+  ColumnId,
   KanbanErrorTypes,
+  TaskId,
+  UserId,
 } from '../../interfaces';
 
 function handleKanbanErr(err: KanbanErrorTypes | null) {
@@ -25,7 +30,7 @@ export const kanbanApi = createApi({
   tagTypes: ['BOARDS', 'BOARD'],
   endpoints: (builder) => ({
     getAllBoards: builder.query({
-      query: (userId: string) => ({
+      query: ({ userId }: UserId) => ({
         url: `${userId}.json`,
         method: 'GET',
       }),
@@ -43,15 +48,7 @@ export const kanbanApi = createApi({
       },
     }),
     editAllBoard: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        data: BoardDataTypes;
-      }) => ({
+      query: ({ userId, boardId, data }: UserId & BoardId & { data: BoardDataTypes }) => ({
         url: `${userId}/${boardId}/data/.json`,
         method: 'PUT',
         body: data,
@@ -66,7 +63,7 @@ export const kanbanApi = createApi({
     }),
 
     getBoard: builder.query({
-      query: ({ userId, boardId }: { userId: string; boardId: string }) => ({
+      query: ({ userId, boardId }: UserId & BoardId) => ({
         url: `${userId}/${boardId}.json`,
         method: 'GET',
       }),
@@ -93,7 +90,7 @@ export const kanbanApi = createApi({
       },
     }),
     addBoard: builder.mutation({
-      query: ({ userId, data }: { userId: string; data: BoardListTypes }) => ({
+      query: ({ userId, data }: UserId & { data: BoardListTypes }) => ({
         url: `${userId}.json`,
         method: 'PATCH',
         body: data,
@@ -109,18 +106,10 @@ export const kanbanApi = createApi({
       },
     }),
     editBoard: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        data: { title: string; description: string };
-      }) => ({
-        url: `${userId}/${boardId}.json`,
+      query: ({ ids, formData }: { ids: UserId & BoardId } & { formData: BasicEntityInfo }) => ({
+        url: `${ids.userId}/${ids.boardId}.json`,
         method: 'PATCH',
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ['BOARDS'],
       async onQueryStarted(id, { queryFulfilled }) {
@@ -133,7 +122,7 @@ export const kanbanApi = createApi({
       },
     }),
     deleteBoard: builder.mutation({
-      query: ({ userId, boardId }: { userId: string; boardId: string }) => ({
+      query: ({ userId, boardId }: UserId & BoardId) => ({
         url: `${userId}/${boardId}.json`,
         method: 'DELETE',
       }),
@@ -149,16 +138,8 @@ export const kanbanApi = createApi({
     }),
 
     addColumn: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        data: BoardDataTypes;
-      }) => ({
-        url: `${userId}/${boardId}/data/.json`,
+      query: ({ ids, data }: { ids: UserId & BoardId } & { data: BoardDataTypes }) => ({
+        url: `${ids.userId}/${ids.boardId}/data/.json`,
         method: 'PATCH',
         body: data,
       }),
@@ -174,19 +155,12 @@ export const kanbanApi = createApi({
     }),
     editColumn: builder.mutation({
       query: ({
-        userId,
-        boardId,
-        columnId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        columnId: string;
-        data: { title: string; description: string };
-      }) => ({
-        url: `${userId}/${boardId}/data/${columnId}.json`,
+        ids,
+        formData,
+      }: { ids: UserId & BoardId & ColumnId } & { formData: BasicEntityInfo }) => ({
+        url: `${ids.userId}/${ids.boardId}/data/${ids.columnId}.json`,
         method: 'PATCH',
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ['BOARD'],
       async onQueryStarted(id, { queryFulfilled }) {
@@ -199,15 +173,7 @@ export const kanbanApi = createApi({
       },
     }),
     deleteColumn: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        columnId,
-      }: {
-        userId: string;
-        boardId: string;
-        columnId: string;
-      }) => ({
+      query: ({ userId, boardId, columnId }: UserId & BoardId & ColumnId) => ({
         url: `${userId}/${boardId}/data/${columnId}.json`,
         method: 'DELETE',
       }),
@@ -222,18 +188,8 @@ export const kanbanApi = createApi({
       },
     }),
     addTask: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        columnId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        columnId: string;
-        data: ColumnDataTypes;
-      }) => ({
-        url: `${userId}/${boardId}/data/${columnId}/data/.json`,
+      query: ({ ids, data }: { ids: UserId & BoardId & ColumnId } & { data: ColumnDataTypes }) => ({
+        url: `${ids.userId}/${ids.boardId}/data/${ids.columnId}/data/.json`,
         method: 'PATCH',
         body: data,
       }),
@@ -249,21 +205,14 @@ export const kanbanApi = createApi({
     }),
     editTask: builder.mutation({
       query: ({
-        userId,
-        boardId,
-        columnId,
-        taskId,
-        data,
-      }: {
-        userId: string;
-        boardId: string;
-        taskId: string;
-        columnId: string;
-        data: { title: string; description: string };
+        ids,
+        formData,
+      }: { ids: UserId & BoardId & ColumnId & TaskId } & {
+        formData: BasicEntityInfo;
       }) => ({
-        url: `${userId}/${boardId}/data/${columnId}/data/${taskId}.json`,
+        url: `${ids.userId}/${ids.boardId}/data/${ids.columnId}/data/${ids.taskId}.json`,
         method: 'PATCH',
-        body: data,
+        body: formData,
       }),
       invalidatesTags: ['BOARD'],
       async onQueryStarted(id, { queryFulfilled }) {
@@ -276,17 +225,7 @@ export const kanbanApi = createApi({
       },
     }),
     deleteTask: builder.mutation({
-      query: ({
-        userId,
-        boardId,
-        columnId,
-        taskId,
-      }: {
-        userId: string;
-        boardId: string;
-        columnId: string;
-        taskId: string;
-      }) => ({
+      query: ({ userId, boardId, columnId, taskId }: UserId & BoardId & ColumnId & TaskId) => ({
         url: `${userId}/${boardId}/data/${columnId}/data/${taskId}.json`,
         method: 'DELETE',
       }),

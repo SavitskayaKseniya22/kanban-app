@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ErrorMessage } from '@hookform/error-message';
@@ -9,6 +9,7 @@ import { Id, toast } from 'react-toastify';
 import { useSignInMutation, useSignUpMutation } from '../../store/auth/authApi';
 import backAuthPic from '../../assets/images/png/image_processing.png';
 import { StyledForm, StyledInput, StyledButtonList } from '../../styledComponents/SharedStyles';
+import { AuthTypes } from '../../interfaces';
 
 const StyledAuthPage = styled('main')`
   align-items: center;
@@ -21,7 +22,7 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<AuthTypes>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     criteriaMode: 'all',
@@ -36,7 +37,7 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
 
   useEffect(() => {
     if (emailToastId.current) {
-      toast.dismiss(emailToastId.current as Id);
+      toast.dismiss(emailToastId.current);
     }
     if (errors.email) {
       emailToastId.current = toast.warn(
@@ -50,7 +51,7 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
 
   useEffect(() => {
     if (passwordToastId.current) {
-      toast.dismiss(passwordToastId.current as Id);
+      toast.dismiss(passwordToastId.current);
     }
 
     if (errors.password) {
@@ -63,15 +64,14 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
     }
   }, [errors, errors.password]);
 
-  const onSubmit: SubmitHandler<FieldValues> = (formData) => {
-    const { email, password } = formData;
+  const onSubmit: SubmitHandler<AuthTypes> = (formData) => {
     if (formType === 'login') {
-      signIn({ email, password });
+      signIn(formData);
     } else {
-      signUp({ email, password })
+      signUp(formData)
         .unwrap()
         .then(() => {
-          signIn({ email, password });
+          signIn(formData);
         })
         .catch((rejected) => {
           console.error(rejected);
@@ -85,7 +85,6 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
         <StyledInput
           type="email"
           placeholder="email"
-          defaultValue=""
           {...register('email', {
             required: {
               value: true,
@@ -100,7 +99,6 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
         <StyledInput
           type="password"
           placeholder="password"
-          defaultValue=""
           {...register('password', {
             required: {
               value: true,

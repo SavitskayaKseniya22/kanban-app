@@ -36,9 +36,9 @@ const StyledTask = styled('li')`
   }
 `;
 
-function Task({ taskProp }: { taskProp: TaskTypes }) {
-  const { title, description, ancestors, taskId } = taskProp;
-  const { columnId, boardId, userId } = ancestors;
+function Task({ task }: { task: TaskTypes }) {
+  const { title, description, ancestors, id: taskId } = task;
+
   const [deleteTask] = useDeleteTaskMutation();
   const modalContext = React.useContext(ModalContext);
 
@@ -55,9 +55,7 @@ function Task({ taskProp }: { taskProp: TaskTypes }) {
           onClick={() => {
             modalContext.setModalData({
               type: 'editTask',
-              userId,
-              boardId,
-              columnId,
+              ...ancestors,
               taskId,
             });
           }}
@@ -68,7 +66,7 @@ function Task({ taskProp }: { taskProp: TaskTypes }) {
         <button
           type="button"
           onClick={() => {
-            deleteTask({ userId, boardId, columnId, taskId });
+            deleteTask({ ...ancestors, taskId });
           }}
         >
           <i className="fa-solid fa-trash-can" />

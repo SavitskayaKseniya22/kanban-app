@@ -29,14 +29,14 @@ const StyledBoardsList = styled('main')`
 function BoardsList() {
   const { activeUser } = useSelector((state: RootState) => state.persist.user);
   const userId = useRef((activeUser as ActiveUserTypes).localId).current;
-  const { data } = useGetAllBoardsQuery(userId, { skip: !activeUser });
+  const { data } = useGetAllBoardsQuery({ userId }, { skip: !activeUser });
 
   const modalContext = React.useContext(ModalContext);
 
   return (
     <StyledBoardsList>
-      {data && data.length > 0 ? (
-        data.map((board) => <BoardItemShortCut board={board} key={board.boardId + Date.now()} />)
+      {data && data.length ? (
+        data.map((board) => <BoardItemShortCut board={board} key={board.id} />)
       ) : (
         <span>The board has not been added. Please add a new board.</span>
       )}

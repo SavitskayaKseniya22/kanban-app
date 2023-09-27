@@ -32,7 +32,7 @@ export const StyledBoardItemShortCut = styled('div')`
 `;
 
 function BoardItemShortCut({ board }: { board: BoardTypes }) {
-  const { title, description, boardId, ancestors } = board;
+  const { title, description, id: boardId, ancestors } = board;
   const [deleteBoard] = useDeleteBoardMutation();
   const modalContext = React.useContext(ModalContext);
 

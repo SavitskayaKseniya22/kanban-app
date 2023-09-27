@@ -2,36 +2,15 @@ import React from 'react';
 import EntityCreationForm from './EntityCreationForm';
 import { useEditTaskMutation } from '../../../store/kanban/kanbanApi';
 import ModalContext from '../../../context';
+import { BasicEntityInfo, BoardId, ColumnId, TaskId, UserId } from '../../../interfaces';
 
-function EditTask({
-  userId,
-  boardId,
-  columnId,
-  taskId,
-}: {
-  userId: string;
-  boardId: string;
-  columnId: string;
-  taskId: string;
-}) {
+function EditTask({ ids }: { ids: UserId & BoardId & ColumnId & TaskId }) {
   const [editTask] = useEditTaskMutation();
   const modalContext = React.useContext(ModalContext);
 
-  const onSubmit = (title: string, description: string) => {
-    if (title && description) {
-      editTask({
-        userId,
-        boardId,
-        columnId,
-        taskId,
-        data: {
-          title,
-          description,
-        },
-      });
-
-      modalContext.setModalData(undefined);
-    }
+  const onSubmit = (formData: BasicEntityInfo) => {
+    editTask({ ids, formData });
+    modalContext.setModalData(undefined);
   };
   return <EntityCreationForm onSubmitRef={onSubmit} />;
 }

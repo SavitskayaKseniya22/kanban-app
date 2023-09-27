@@ -1,5 +1,4 @@
 import { createContext } from 'react';
-import { ColumnTypes, TaskTypes } from './interfaces';
 
 export type ModalDataContextType = {
   type: 'addColumn' | 'editColumn' | 'addTask' | 'editTask' | 'addBoard' | 'editBoard';
@@ -7,8 +6,17 @@ export type ModalDataContextType = {
   boardId?: string | undefined;
   columnId?: string | undefined;
   taskId?: string | undefined;
-  data?: TaskTypes[] | ColumnTypes[] | undefined;
 };
+
+export type ModalDataContextTypeCopy<T> = T extends 'editTask'
+  ? { userId: string; boardId: string; columnId: string; taskId: string }
+  : T extends 'editColumn' | 'addTask'
+  ? { userId: string; boardId: string; columnId: string }
+  : T extends 'addColumn' | 'editBoard'
+  ? { userId: string; boardId: string }
+  : T extends 'addBoard'
+  ? { userId: string }
+  : undefined;
 
 export type ModalContextType = {
   modalData: undefined | ModalDataContextType;

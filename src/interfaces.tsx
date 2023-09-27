@@ -26,38 +26,6 @@ export interface KanbanErrorTypes {
   };
 }
 
-export interface ActiveUserDataTypes {
-  localId: string;
-  email: string;
-  emailVerified: boolean;
-  displayName: string;
-  providerUserInfo: [
-    {
-      providerId: string;
-      displayName: string;
-      photoUrl: string;
-      federatedId: string;
-      email: string;
-      rawId: string;
-      screenName: string;
-    },
-  ];
-  photoUrl: string;
-  passwordHash: string;
-  passwordUpdatedAt: number;
-  validSince: string;
-  disabled: boolean;
-  lastLoginAt: string;
-  createdAt: string;
-  customAuth: boolean;
-  initialEmail: string;
-}
-
-export interface ActiveUserListDataTypes {
-  kind: string;
-  users: ActiveUserDataTypes[];
-}
-
 export interface ActiveUserTypes {
   kind: string;
   localId: string;
@@ -70,61 +38,57 @@ export interface ActiveUserTypes {
   profilePicture: string;
 }
 
-export interface SignInUpArgsTypes {
+export interface AuthTypes {
   email: string;
   password: string;
 }
 
-export interface ChangePasswordArgsTypes {
-  idToken: string;
-  password: string;
-}
+export type UserId = {
+  userId: string;
+};
 
-export interface ChangeEmailArgsTypes {
-  idToken: string;
-  email: string;
-}
+export type BoardId = {
+  boardId: string;
+};
 
-export interface TaskTypes {
+export type ColumnId = {
+  columnId: string;
+};
+
+export type TaskId = {
   taskId: string;
+};
+
+export interface BasicEntityInfo {
   title: string;
   description: string;
+}
+
+export interface BasicEntity extends BasicEntityInfo {
+  id: string;
   order: number;
-  ancestors: {
-    columnId: string;
-    boardId: string;
-    userId: string;
-  };
+}
+
+export interface TaskTypes extends BasicEntity {
+  ancestors: UserId & BoardId & ColumnId;
 }
 
 export interface ColumnDataTypes {
   [itemId: string]: TaskTypes;
 }
 
-export interface ColumnTypes {
-  columnId: string;
-  title: string;
-  description: string;
-  order: number;
-  ancestors: {
-    boardId: string;
-    userId: string;
-  };
+export interface ColumnTypes extends BasicEntity {
   data: ColumnDataTypes;
+  ancestors: UserId & BoardId;
 }
 
 export interface BoardDataTypes {
   [columnId: string]: ColumnTypes;
 }
 
-export interface BoardTypes {
-  boardId: string;
-  title: string;
-  description: string;
-  ancestors: {
-    userId: string;
-  };
+export interface BoardTypes extends BasicEntity {
   data: BoardDataTypes;
+  ancestors: UserId;
 }
 
 export interface BoardListTypes {

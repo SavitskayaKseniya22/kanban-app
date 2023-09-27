@@ -53,7 +53,7 @@ function Board() {
         type="button"
         className="board__button_add"
         onClick={() => {
-          modalContext.setModalData({ type: 'addColumn', userId, boardId, data });
+          modalContext.setModalData({ type: 'addColumn', userId, boardId });
         }}
       >
         <i className="fa-solid fa-plus" />
