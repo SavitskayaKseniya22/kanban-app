@@ -6,25 +6,27 @@ import {
   createRoutesFromElements,
   Navigate,
 } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { toast } from 'react-toastify';
 import Header from './header/Header';
 import Footer from './Footer';
 import MainPage from '../pages/MainPage';
 import { AuthForm } from './auth/AuthForm';
-import { RootState } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
 import BoardsList from '../pages/boards/BoardsList';
 import Board from '../pages/board/Board';
 import { resetActiveUser } from '../store/auth/authSlice';
 import BoardWrapper from '../pages/boards/BoardWrapper';
+import Page404 from '../pages/404/Page404';
+import ErrorPage from '../pages/ErrorPage';
 
 function isItExpired(loginTime: number, expiresIn: string) {
   return (Date.now() - loginTime) / 1000 > +expiresIn;
 }
 
 function PrivateRoute() {
-  const dispatch = useDispatch();
-  const { activeUser, loginTime } = useSelector((state: RootState) => state.persist.user);
+  const dispatch = useAppDispatch();
+  const { activeUser, loginTime } = useAppSelector((state) => state.persist.user);
 
   if (loginTime && activeUser) {
     if (isItExpired(loginTime, activeUser.expiresIn)) {
@@ -34,18 +36,26 @@ function PrivateRoute() {
       return <Outlet />;
     }
   }
-  return <Navigate to="/auth/login" />;
+  return (
+    <main>
+      <Navigate to="/auth/login" />
+    </main>
+  );
 }
 
 function PrivateAuthRoute() {
-  const dispatch = useDispatch();
-  const { activeUser, loginTime } = useSelector((state: RootState) => state.persist.user);
+  const dispatch = useAppDispatch();
+  const { activeUser, loginTime } = useAppSelector((state) => state.persist.user);
   if (loginTime && activeUser) {
     if (isItExpired(loginTime, activeUser.expiresIn)) {
       toast.warn('Your session expired. Please login again');
       dispatch(resetActiveUser());
     } else {
-      return <Navigate to="/boards" />;
+      return (
+        <main>
+          <Navigate to="/boards" />
+        </main>
+      );
     }
   }
 
@@ -54,12 +64,7 @@ function PrivateAuthRoute() {
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path="/"
-      errorElement="<div>Something went wrong. Please reload the page.</div>"
-      id="root"
-      element={<Outlet />}
-    >
+    <Route path="/" errorElement={<ErrorPage />} id="root" element={<Outlet />}>
       <Route
         element={
           <>
@@ -90,7 +95,7 @@ const router = createBrowserRouter(
             <Route path=":id" element={<Board />} />
           </Route>
         </Route>
-        <Route path="*" element="<div>404</div>" />
+        <Route path="*" element={<Page404 />} />
       </Route>
     </Route>
   )

@@ -1,10 +1,9 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
 import { useGetAllBoardsQuery } from '../../store/kanban/kanbanApi';
 import BoardItemShortCut from './BoardItemShortCut';
-import { RootState } from '../../store/store';
+import { useAppSelector } from '../../store/store';
 
 import ModalContext from '../../context';
 import { ActiveUserTypes } from '../../interfaces';
@@ -27,7 +26,7 @@ const StyledBoardsList = styled('main')`
 `;
 
 function BoardsList() {
-  const { activeUser } = useSelector((state: RootState) => state.persist.user);
+  const { activeUser } = useAppSelector((state) => state.persist.user);
   const userId = useRef((activeUser as ActiveUserTypes).localId).current;
   const { data } = useGetAllBoardsQuery({ userId }, { skip: !activeUser });
 

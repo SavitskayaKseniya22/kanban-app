@@ -1,11 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ModalContext from '../../context';
 import { useGetBoardQuery } from '../../store/kanban/kanbanApi';
-import { RootState } from '../../store/store';
+import { useAppSelector } from '../../store/store';
 import BoardContent from './BoardContent';
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
 
@@ -26,7 +25,7 @@ const StyledBoard = styled('main')`
 `;
 
 function Board() {
-  const { activeUser } = useSelector((state: RootState) => state.persist.user);
+  const { activeUser } = useAppSelector((state) => state.persist.user);
   const userId = useRef(activeUser!.localId).current;
   const { id } = useParams();
   const boardId = useRef(id || '').current;

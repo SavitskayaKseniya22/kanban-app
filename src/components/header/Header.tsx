@@ -2,10 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+
 import LanguagePanel from './LanguagePanel';
 import { StyledButtonDefault } from '../../styledComponents/SharedStyles';
-import { RootState } from '../../store/store';
+import { useAppDispatch, useAppSelector } from '../../store/store';
 import { resetActiveUser } from '../../store/auth/authSlice';
 import Logo from './Logo';
 
@@ -39,9 +39,9 @@ const StyledHeader = styled('header')`
 `;
 
 function Header() {
-  const { activeUser } = useSelector((state: RootState) => state.persist.user);
+  const { activeUser } = useAppSelector((state) => state.persist.user);
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   return (
