@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
-import ModalContext from '../context';
+import ModalContext from '../contexts/modalContext';
 
 const StyledModal = styled('div')`
   width: 100%;

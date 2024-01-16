@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAddBoardMutation } from '../../../store/kanban/kanbanApi';
 import EntityCreationForm from './EntityCreationForm';
-import ModalContext from '../../../context';
-import { BasicEntityInfo, UserId } from '../../../interfaces';
+import ModalContext from '../../../contexts/modalContext';
+import { UserId, BasicEntityInfo, TokenId } from '../../../interfaces';
 
-function CreateBoard({ ids }: { ids: UserId }) {
+function CreateBoard({ ids }: { ids: UserId & TokenId }) {
   const [addBoard] = useAddBoardMutation();
   const modalContext = React.useContext(ModalContext);
 

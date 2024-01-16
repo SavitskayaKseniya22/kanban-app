@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { BoardTypes } from '../../interfaces';
+import { ActiveUserTypes, BoardTypes } from '../../interfaces';
 import { useDeleteBoardMutation } from '../../store/kanban/kanbanApi';
-import ModalContext from '../../context';
+import ModalContext from '../../contexts/modalContext';
+import { useAppSelector } from '../../store/store';
 
 export const StyledBoardItemShortCut = styled('div')`
   text-align: center;
@@ -36,6 +37,9 @@ function BoardItemShortCut({ board }: { board: BoardTypes }) {
   const [deleteBoard] = useDeleteBoardMutation();
   const modalContext = React.useContext(ModalContext);
 
+  const { activeUser } = useAppSelector((state) => state.persist.user);
+  const { idToken } = activeUser as ActiveUserTypes;
+
   return (
     <StyledBoardItemShortCut data-id={boardId}>
       <h3>{title}</h3>
@@ -55,7 +59,7 @@ function BoardItemShortCut({ board }: { board: BoardTypes }) {
         <button
           type="button"
           onClick={() => {
-            deleteBoard({ userId: ancestors.userId, boardId });
+            deleteBoard({ userId: ancestors.userId, boardId, idToken });
           }}
         >
           <i className="fa-solid fa-trash-can" />

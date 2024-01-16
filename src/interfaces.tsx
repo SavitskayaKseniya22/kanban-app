@@ -15,9 +15,7 @@ export interface AuthErrorTypes {
 export interface KanbanErrorTypes {
   error: {
     status: string;
-    originalStatus: number;
-    data: string;
-    error: string;
+    data: { error: string };
   };
   isUnhandledError: boolean;
   meta: {
@@ -57,6 +55,10 @@ export type ColumnId = {
 
 export type TaskId = {
   taskId: string;
+};
+
+export type TokenId = {
+  idToken: string;
 };
 
 export interface BasicEntityInfo {

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAddTaskMutation } from '../../../store/kanban/kanbanApi';
-import { BasicEntityInfo, BoardId, ColumnId, UserId } from '../../../interfaces';
-import ModalContext from '../../../context';
+import { BasicEntityInfo, BoardId, ColumnId, TokenId, UserId } from '../../../interfaces';
+import ModalContext from '../../../contexts/modalContext';
 import EntityCreationForm from './EntityCreationForm';
 
-function CreateTask({ ids }: { ids: UserId & BoardId & ColumnId }) {
+function CreateTask({ ids }: { ids: UserId & BoardId & ColumnId & TokenId }) {
   const [addTask] = useAddTaskMutation();
   const modalContext = React.useContext(ModalContext);
 

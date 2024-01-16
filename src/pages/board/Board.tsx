@@ -2,11 +2,12 @@ import React, { useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
-import ModalContext from '../../context';
+import ModalContext from '../../contexts/modalContext';
 import { useGetBoardQuery } from '../../store/kanban/kanbanApi';
 import { useAppSelector } from '../../store/store';
 import BoardContent from './BoardContent';
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
+import { ActiveUserTypes } from '../../interfaces';
 
 const StyledBoard = styled('main')`
   background: no-repeat bottom right/40% scroll url(${backBoardsPic});
@@ -26,11 +27,14 @@ const StyledBoard = styled('main')`
 
 function Board() {
   const { activeUser } = useAppSelector((state) => state.persist.user);
-  const userId = useRef(activeUser!.localId).current;
+  const { localId: userId, idToken } = activeUser as ActiveUserTypes;
   const { id } = useParams();
   const boardId = useRef(id || '').current;
 
-  const { data, isError, isSuccess } = useGetBoardQuery({ userId, boardId }, { skip: !activeUser });
+  const { data, isError, isSuccess } = useGetBoardQuery(
+    { userId, boardId, idToken },
+    { skip: !activeUser }
+  );
 
   const navigate = useNavigate();
   const modalContext = React.useContext(ModalContext);

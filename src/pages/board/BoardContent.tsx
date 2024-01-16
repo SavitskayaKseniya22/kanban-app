@@ -3,7 +3,7 @@
 import { DropResult, DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { ColumnTypes } from '../../interfaces';
+import { ActiveUserTypes, ColumnTypes } from '../../interfaces';
 import Column from './Column';
 import { useEditAllBoardMutation } from '../../store/kanban/kanbanApi';
 import {
@@ -13,6 +13,7 @@ import {
   reassignOrder,
   reorder,
 } from '../../utils';
+import { useAppSelector } from '../../store/store';
 
 const StyledBoardContent = styled('ul')`
   display: flex;
@@ -23,6 +24,8 @@ const StyledBoardContent = styled('ul')`
 `;
 
 function BoardContent({ data }: { data: ColumnTypes[] }) {
+  const { activeUser } = useAppSelector((state) => state.persist.user);
+  const { idToken } = activeUser as ActiveUserTypes;
   const [columns, setColumns] = useState<ColumnTypes[]>(data);
   const [editAllBoard] = useEditAllBoardMutation();
 
@@ -34,10 +37,10 @@ function BoardContent({ data }: { data: ColumnTypes[] }) {
 
   useEffect(() => {
     if (isReordered.current) {
-      editAllBoard({ ids: columns[0].ancestors, data: arrayToObject(columns) });
+      editAllBoard({ ids: { ...columns[0].ancestors, idToken }, data: arrayToObject(columns) });
       isReordered.current = false;
     }
-  }, [columns, editAllBoard]);
+  }, [columns, editAllBoard, idToken]);
 
   const onDragEnd = (result: DropResult) => {
     const { type, destination, source } = result;

@@ -6,19 +6,18 @@ import {
   createRoutesFromElements,
   Navigate,
 } from 'react-router-dom';
-
 import { toast } from 'react-toastify';
 import Header from './header/Header';
-import Footer from './Footer';
 import MainPage from '../pages/MainPage';
 import { AuthForm } from './auth/AuthForm';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import BoardsList from '../pages/boards/BoardsList';
 import Board from '../pages/board/Board';
 import { resetActiveUser } from '../store/auth/authSlice';
 import BoardWrapper from '../pages/boards/BoardWrapper';
 import Page404 from '../pages/404/Page404';
 import ErrorPage from '../pages/ErrorPage';
+import BoardsList from '../pages/boards/BoardsList';
+import Footer from './Footer';
 
 function isItExpired(loginTime: number, expiresIn: string) {
   return (Date.now() - loginTime) / 1000 > +expiresIn;

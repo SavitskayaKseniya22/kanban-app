@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAddColumnMutation } from '../../../store/kanban/kanbanApi';
-import { BasicEntityInfo, BoardId, UserId } from '../../../interfaces';
-import ModalContext from '../../../context';
+import { BasicEntityInfo, BoardId, TokenId, UserId } from '../../../interfaces';
+import ModalContext from '../../../contexts/modalContext';
 import EntityCreationForm from './EntityCreationForm';
 
-function CreateColumn({ ids }: { ids: UserId & BoardId }) {
+function CreateColumn({ ids }: { ids: UserId & BoardId & TokenId }) {
   const [addColumn] = useAddColumnMutation();
   const modalContext = React.useContext(ModalContext);
 

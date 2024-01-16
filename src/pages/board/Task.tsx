@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TaskTypes } from '../../interfaces';
+import { ActiveUserTypes, TaskTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useDeleteTaskMutation } from '../../store/kanban/kanbanApi';
-import ModalContext from '../../context';
+import ModalContext from '../../contexts/modalContext';
+import { useAppSelector } from '../../store/store';
 
 const StyledTask = styled('li')`
   display: flex;
@@ -39,6 +40,9 @@ const StyledTask = styled('li')`
 function Task({ task }: { task: TaskTypes }) {
   const { title, description, ancestors, id: taskId } = task;
 
+  const { activeUser } = useAppSelector((state) => state.persist.user);
+  const { idToken } = activeUser as ActiveUserTypes;
+
   const [deleteTask] = useDeleteTaskMutation();
   const modalContext = React.useContext(ModalContext);
 
@@ -66,7 +70,7 @@ function Task({ task }: { task: TaskTypes }) {
         <button
           type="button"
           onClick={() => {
-            deleteTask({ ...ancestors, taskId });
+            deleteTask({ ...ancestors, taskId, idToken });
           }}
         >
           <i className="fa-solid fa-trash-can" />

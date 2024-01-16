@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ColumnTypes } from '../../interfaces';
+import { ActiveUserTypes, ColumnTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
 import ColumnContent from './ColumnContent';
-import ModalContext from '../../context';
+import ModalContext from '../../contexts/modalContext';
 import { objectToArray } from '../../utils';
+import { useAppSelector } from '../../store/store';
 
 const StyledColumn = styled('li')`
   display: flex;
@@ -55,6 +56,8 @@ const StyledColumn = styled('li')`
 
 function Column({ columnProp }: { columnProp: ColumnTypes }) {
   const { title, description, id: columnId, ancestors, data } = columnProp;
+  const { activeUser } = useAppSelector((state) => state.persist.user);
+  const { idToken } = activeUser as ActiveUserTypes;
 
   const [deleteColumn] = useDeleteColumnMutation();
 
@@ -78,7 +81,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         <button
           type="button"
           onClick={() => {
-            deleteColumn({ ...ancestors, columnId });
+            deleteColumn({ ...ancestors, columnId, idToken });
           }}
           className="column__controls_delete"
         >

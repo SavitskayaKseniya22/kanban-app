@@ -1,10 +1,10 @@
 import React from 'react';
 import EntityCreationForm from './EntityCreationForm';
 import { useEditTaskMutation } from '../../../store/kanban/kanbanApi';
-import ModalContext from '../../../context';
-import { BasicEntityInfo, BoardId, ColumnId, TaskId, UserId } from '../../../interfaces';
+import ModalContext from '../../../contexts/modalContext';
+import { BasicEntityInfo, BoardId, ColumnId, TaskId, TokenId, UserId } from '../../../interfaces';
 
-function EditTask({ ids }: { ids: UserId & BoardId & ColumnId & TaskId }) {
+function EditTask({ ids }: { ids: UserId & BoardId & ColumnId & TaskId & TokenId }) {
   const [editTask] = useEditTaskMutation();
   const modalContext = React.useContext(ModalContext);
 

@@ -1,11 +1,10 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
 import { useGetAllBoardsQuery } from '../../store/kanban/kanbanApi';
 import BoardItemShortCut from './BoardItemShortCut';
 import { useAppSelector } from '../../store/store';
-
-import ModalContext from '../../context';
+import ModalContext from '../../contexts/modalContext';
 import { ActiveUserTypes } from '../../interfaces';
 
 const StyledBoardsList = styled('main')`
@@ -27,8 +26,8 @@ const StyledBoardsList = styled('main')`
 
 function BoardsList() {
   const { activeUser } = useAppSelector((state) => state.persist.user);
-  const userId = useRef((activeUser as ActiveUserTypes).localId).current;
-  const { data } = useGetAllBoardsQuery({ userId }, { skip: !activeUser });
+  const { localId: userId, idToken } = activeUser as ActiveUserTypes;
+  const { data } = useGetAllBoardsQuery({ userId, idToken }, { skip: !activeUser });
 
   const modalContext = React.useContext(ModalContext);
 
