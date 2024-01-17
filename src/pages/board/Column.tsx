@@ -1,5 +1,7 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import { ActiveUserTypes, ColumnTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useDeleteColumnMutation } from '../../store/kanban/kanbanApi';
@@ -60,6 +62,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
   const { idToken } = activeUser as ActiveUserTypes;
 
   const [deleteColumn] = useDeleteColumnMutation();
+  const { t } = useTranslation();
 
   const modalContext = React.useContext(ModalContext);
 
@@ -68,6 +71,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
       <div className="column__controls">
         <button
           type="button"
+          title={t('data.editColumn')}
           onClick={() => {
             modalContext.setModalData({
               type: 'editColumn',
@@ -80,6 +84,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         </button>
         <button
           type="button"
+          title={t('data.deleteColumn')}
           onClick={() => {
             deleteColumn({ ...ancestors, columnId, idToken });
           }}
@@ -89,6 +94,7 @@ function Column({ columnProp }: { columnProp: ColumnTypes }) {
         </button>
         <button
           type="button"
+          title={t('data.addTask')}
           onClick={() => {
             modalContext.setModalData({
               type: 'addTask',

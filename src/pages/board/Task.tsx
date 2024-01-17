@@ -1,5 +1,7 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import { ActiveUserTypes, TaskTypes } from '../../interfaces';
 import { StyledIconButton } from '../../styledComponents/SharedStyles';
 import { useDeleteTaskMutation } from '../../store/kanban/kanbanApi';
@@ -46,6 +48,8 @@ function Task({ task }: { task: TaskTypes }) {
   const [deleteTask] = useDeleteTaskMutation();
   const modalContext = React.useContext(ModalContext);
 
+  const { t } = useTranslation();
+
   return (
     <StyledTask>
       <div className="task__info">
@@ -56,6 +60,7 @@ function Task({ task }: { task: TaskTypes }) {
       <div className="task__controls">
         <button
           type="button"
+          title={t('data.editTask')}
           onClick={() => {
             modalContext.setModalData({
               type: 'editTask',
@@ -69,6 +74,7 @@ function Task({ task }: { task: TaskTypes }) {
 
         <button
           type="button"
+          title={t('data.deleteTask')}
           onClick={() => {
             deleteTask({ ...ancestors, taskId, idToken });
           }}

@@ -1,6 +1,8 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import { ActiveUserTypes, BoardTypes } from '../../interfaces';
 import { useDeleteBoardMutation } from '../../store/kanban/kanbanApi';
 import ModalContext from '../../contexts/modalContext';
@@ -40,16 +42,19 @@ function BoardItemShortCut({ board }: { board: BoardTypes }) {
   const { activeUser } = useAppSelector((state) => state.persist.user);
   const { idToken } = activeUser as ActiveUserTypes;
 
+  const { t } = useTranslation();
+
   return (
     <StyledBoardItemShortCut data-id={boardId}>
       <h3>{title}</h3>
       <p>{description}</p>
       <div className="controls">
-        <Link to={`${boardId}`}>
+        <Link to={`${boardId}`} title={t('data.seeBoard')}>
           <i className="fa-solid fa-up-right-from-square" />
         </Link>
         <button
           type="button"
+          title={t('data.editBoard')}
           onClick={() => {
             modalContext.setModalData({ type: 'editBoard', userId: ancestors.userId, boardId });
           }}
@@ -58,6 +63,7 @@ function BoardItemShortCut({ board }: { board: BoardTypes }) {
         </button>
         <button
           type="button"
+          title={t('data.deleteBoard')}
           onClick={() => {
             deleteBoard({ userId: ancestors.userId, boardId, idToken });
           }}

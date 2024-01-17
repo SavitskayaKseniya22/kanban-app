@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import firebaseApp from '../../services/firebase';
 import { AuthTypes, AuthErrorTypes } from '../../interfaces';
 import { updateLoginTime, updateActiveUser } from './authSlice';
+import i18n from '../../i18n';
 
 export function transformAuthError(response: FetchBaseQueryError) {
   const { message } = (response.data as AuthErrorTypes).error;
@@ -34,7 +35,7 @@ export const authApi = createApi({
       async onQueryStarted(id, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success('You are registered successfully');
+          toast.success(i18n.t('toast.registered'));
         } catch (err) {
           if (err && typeof err === 'object' && 'error' in err) {
             const { message, code } = (err as AuthErrorTypes).error;
@@ -59,7 +60,7 @@ export const authApi = createApi({
           const { data } = await queryFulfilled;
           dispatch(updateActiveUser(data));
           dispatch(updateLoginTime('mark'));
-          toast.success("You've successfully logged in");
+          toast.success(i18n.t('toast.logged'));
         } catch (err) {
           if (err && typeof err === 'object' && 'error' in err) {
             const { message, code } = (err as AuthErrorTypes).error;

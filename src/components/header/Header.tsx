@@ -53,6 +53,7 @@ function Header() {
           <button
             type="button"
             className="header__button_logout"
+            title={t('header.logout')}
             onClick={() => {
               dispatch(resetActiveUser());
             }}
@@ -60,17 +61,21 @@ function Header() {
             {t('header.logout')}
           </button>
           {location.pathname !== '/boards' && (
-            <Link to="/boards" className="header__button_go-board">
+            <Link to="/boards" className="header__button_go-board" title={t('header.goBoard')}>
               {t('header.goBoard')}
             </Link>
           )}
         </>
       ) : (
         <>
-          <Link to="/auth/login" className="header__button_signin">
+          <Link to="/auth/login" className="header__button_signin" title={t('header.signin')}>
             {t('header.signin')}
           </Link>
-          <Link to="/auth/registration" className="header__button_signup">
+          <Link
+            to="/auth/registration"
+            className="header__button_signup"
+            title={t('header.signup')}
+          >
             {t('header.signup')}
           </Link>
         </>

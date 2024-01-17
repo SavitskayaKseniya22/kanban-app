@@ -67,25 +67,25 @@ function EntityCreationForm({ onSubmitRef }: { onSubmitRef: (prop: BasicEntityIn
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
       <StyledInput
         type="text"
-        placeholder="title"
+        placeholder={t('header.title')}
         {...register('title', {
           required: {
             value: true,
-            message: `Title: ${t('formValidation.required')}`,
+            message: `${t('header.title')}: ${t('formValidation.required')}`,
           },
         })}
       />
       <StyledInput
         type="text"
-        placeholder="description"
+        placeholder={t('header.description')}
         {...register('description', {
           required: {
             value: true,
-            message: `Description: ${t('formValidation.required')}`,
+            message: `${t('header.description')}: ${t('formValidation.required')}`,
           },
         })}
       />
-      <StyledButton type="submit">Send</StyledButton>
+      <StyledButton type="submit">{t('header.send')}</StyledButton>
     </StyledForm>
   );
 }

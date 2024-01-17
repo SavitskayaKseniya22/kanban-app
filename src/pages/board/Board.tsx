@@ -1,7 +1,9 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { useTranslation } from 'react-i18next';
 import ModalContext from '../../contexts/modalContext';
 import { useGetBoardQuery } from '../../store/kanban/kanbanApi';
 import { useAppSelector } from '../../store/store';
@@ -38,6 +40,7 @@ function Board() {
 
   const navigate = useNavigate();
   const modalContext = React.useContext(ModalContext);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isError) {
@@ -50,11 +53,12 @@ function Board() {
       {isSuccess && data && data.length ? (
         <BoardContent data={data} />
       ) : (
-        <span>The column has not been added. Please add a new column.</span>
+        <span>{t('data.nocolumn')}</span>
       )}
       <button
         type="button"
         className="board__button_add"
+        title={t('data.addColumn')}
         onClick={() => {
           modalContext.setModalData({ type: 'addColumn', userId, boardId });
         }}

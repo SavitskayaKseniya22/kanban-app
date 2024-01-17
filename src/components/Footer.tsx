@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import gitHubLogo from '../assets/images/png/GitHub_Logo_White.png';
 
 const StyledFooter = styled('footer')`
@@ -24,9 +25,15 @@ const StyledFooter = styled('footer')`
 `;
 
 function Footer() {
+  const { t } = useTranslation();
+
   return (
     <StyledFooter>
-      <Link to="https://github.com/SavitskayaKseniya22" target="blank" title="Developer's GitHub">
+      <Link
+        to="https://github.com/SavitskayaKseniya22"
+        target="_blank"
+        title={t('footer.githubLink')}
+      >
         <img src={gitHubLogo} alt="gitHub" />
       </Link>
       <span>&#169; 2023</span>

@@ -1,17 +1,19 @@
 {
   "header": {
-    "profile": "Profile",
     "logout": "Log out",
-    "search": "search",
-    "newBoard": "Create new board",
     "signin": "Sign in",
     "signup": "Sign up",
     "goBoard": "Go to Catalog",
-    "newColumn": "Create new column"
+    "login": "Login",
+    "description": "Description",
+    "title": "Title",
+    "send": "Send",
+    "goMain": "Go to the main page"
   },
-  "footer": {},
+  "footer": {
+    "githubLink": "Developer's GitHub"
+  },
   "mainpage": {
-    "welcome": "Welcome!",
     "titles": {
       "main": "Awesome project management app",
       "features": "Features",
@@ -33,21 +35,25 @@
     "noMatches": "No matches found"
   },
   "auth": {
-    "error": {},
-    "success": {
-      "emailChanged": "Email changed successfully. Please login again.",
-      "passwordChanged": "Password changed successfully. Please login again.",
-      "accountDeleted": "You successfully deleted your account",
-      "dataUploaded": "Account data uploaded successfully",
-      "dataUpdated": "Accout data changed succesfully"
-    },
-    "warn": {},
-    "action": {
-      "changePassword": "Change password",
-      "changeEmail": "Change email",
-      "deleteProfile": "Delete profile",
-      "updateData": "Update account data",
-      "refreshData": "Refresh account data"
-    }
+    "password": "password",
+    "email": "email"
+  },
+  "data": {
+    "nodata": "The board has not been added. Please add a new board.",
+    "nocolumn": "The column has not been added. Please add a new column.",
+    "addBoard": "Add a new board",
+    "editBoard": "Edit the board",
+    "deleteBoard": "Delete the board",
+    "seeBoard": "Got to see the board",
+    "editColumn": "Edit the column",
+    "deleteColumn": "Delete the column",
+    "addColumn": "Add a new column",
+    "addTask": "Add a new task",
+    "editTask": "Edit the task",
+    "deleteTask": "Delete the task"
+  },
+  "toast": {
+    "logged": "You've successfully logged in",
+    "registered": "You are registered successfully"
   }
 }

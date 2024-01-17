@@ -84,7 +84,7 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
       <StyledForm method="post" onSubmit={handleSubmit(onSubmit)} noValidate>
         <StyledInput
           type="email"
-          placeholder="email"
+          placeholder={t('auth.email')}
           {...register('email', {
             required: {
               value: true,
@@ -98,7 +98,7 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
         />
         <StyledInput
           type="password"
-          placeholder="password"
+          placeholder={t('auth.password')}
           {...register('password', {
             required: {
               value: true,
@@ -111,13 +111,17 @@ export function AuthForm({ formType }: { formType: 'login' | 'registration' }) {
           })}
         />
         <StyledButtonList>
-          <button type="submit" className="login__submit">
-            Enter
+          <button type="submit" className="login__submit" title={t('header.login')}>
+            {t('header.login')}
           </button>
           {formType === 'login' ? (
-            <NavLink to="/auth/registration">Registration</NavLink>
+            <NavLink to="/auth/registration" title={t('header.signup')}>
+              {t('header.signup')}
+            </NavLink>
           ) : (
-            <NavLink to="/auth/login">Login</NavLink>
+            <NavLink to="/auth/login" title={t('header.signin')}>
+              {t('header.signin')}
+            </NavLink>
           )}
         </StyledButtonList>
       </StyledForm>

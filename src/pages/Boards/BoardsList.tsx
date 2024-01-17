@@ -1,5 +1,7 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 import backBoardsPic from '../../assets/images/png/d7a8389a8e4a9b5b4a83374ea21f8447.png';
 import { useGetAllBoardsQuery } from '../../store/kanban/kanbanApi';
 import BoardItemShortCut from './BoardItemShortCut';
@@ -30,17 +32,19 @@ function BoardsList() {
   const { data } = useGetAllBoardsQuery({ userId, idToken }, { skip: !activeUser });
 
   const modalContext = React.useContext(ModalContext);
+  const { t } = useTranslation();
 
   return (
     <StyledBoardsList>
       {data && data.length ? (
         data.map((board) => <BoardItemShortCut board={board} key={board.id} />)
       ) : (
-        <span>The board has not been added. Please add a new board.</span>
+        <span>{t('data.nodata')}</span>
       )}
 
       <button
         type="button"
+        title={t('data.addBoard')}
         className="board-list__create"
         onClick={() => {
           modalContext.setModalData({ type: 'addBoard', userId });

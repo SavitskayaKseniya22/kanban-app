@@ -112,7 +112,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully added a new board');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -132,7 +131,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully edited the board');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -148,7 +146,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(attr, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully deleted all boards');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -166,7 +163,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully added a new column');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -177,11 +173,7 @@ export const kanbanApi = createApi({
         ids,
         formData,
       }: {
-        ids: UserId &
-          BoardId &
-          ColumnId & {
-            idToken: string;
-          };
+        ids: UserId & BoardId & ColumnId & TokenId;
       } & { formData: BasicEntityInfo }) => ({
         url: `${ids.userId}/${ids.boardId}/data/${ids.columnId}.json`,
         method: 'PATCH',
@@ -192,7 +184,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully edited the column');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -208,7 +199,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(attr, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully deleted the column');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -219,11 +209,7 @@ export const kanbanApi = createApi({
         ids,
         data,
       }: {
-        ids: UserId &
-          BoardId &
-          ColumnId & {
-            idToken: string;
-          };
+        ids: UserId & BoardId & ColumnId & TokenId;
       } & { data: ColumnDataTypes }) => ({
         url: `${ids.userId}/${ids.boardId}/data/${ids.columnId}/data/.json`,
         method: 'PATCH',
@@ -234,7 +220,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully added a new task');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -256,7 +241,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully edited the task');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }
@@ -278,7 +262,6 @@ export const kanbanApi = createApi({
       async onQueryStarted(attr, { queryFulfilled, dispatch }) {
         try {
           await queryFulfilled;
-          toast.success('You have successfully deleted the column');
         } catch (err) {
           handleKanbanErr(err as KanbanErrorTypes, dispatch);
         }

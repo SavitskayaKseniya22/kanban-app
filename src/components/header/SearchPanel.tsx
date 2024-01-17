@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { StyledButtonDefault } from '../../styledComponents/SharedStyles';
 
@@ -26,10 +27,9 @@ const StyledSearchPanel = styled('form')`
 `;
 
 function SearchPanel() {
-  const { t } = useTranslation();
   return (
     <StyledSearchPanel>
-      <input type="text" placeholder={t('header.search')} />
+      <input type="text" placeholder="search" />
       <button type="submit">
         <i className="fa-solid fa-magnifying-glass" />
       </button>
