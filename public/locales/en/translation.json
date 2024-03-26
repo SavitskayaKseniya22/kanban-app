@@ -1,0 +1,59 @@
+{
+  "header": {
+    "logout": "Log out",
+    "signin": "Sign in",
+    "signup": "Sign up",
+    "goBoard": "Go to Catalog",
+    "login": "Login",
+    "description": "Description",
+    "title": "Title",
+    "send": "Send",
+    "goMain": "Go to the main page"
+  },
+  "footer": {
+    "githubLink": "Developer's GitHub"
+  },
+  "mainpage": {
+    "titles": {
+      "main": "Awesome project management app",
+      "features": "Features",
+      "team": "Meet the team"
+    },
+    "features": {
+      "organize": "Organize your team",
+      "plan": "Plan projects and assign responsibility",
+      "collaborate": "Collaborate efficiently",
+      "track": "Track progress and deliver on time",
+      "enjoy": "Enjoy the results of your work"
+    }
+  },
+  "formValidation": {
+    "required": "This is required",
+    "onlyLetters": "The value must contain only letters",
+    "short": "The value is too short",
+    "email": "Entered value does not match email format",
+    "noMatches": "No matches found"
+  },
+  "auth": {
+    "password": "password",
+    "email": "email"
+  },
+  "data": {
+    "nodata": "The board has not been added. Please add a new board.",
+    "nocolumn": "The column has not been added. Please add a new column.",
+    "addBoard": "Add a new board",
+    "editBoard": "Edit the board",
+    "deleteBoard": "Delete the board",
+    "seeBoard": "Got to see the board",
+    "editColumn": "Edit the column",
+    "deleteColumn": "Delete the column",
+    "addColumn": "Add a new column",
+    "addTask": "Add a new task",
+    "editTask": "Edit the task",
+    "deleteTask": "Delete the task"
+  },
+  "toast": {
+    "logged": "You've successfully logged in",
+    "registered": "You are registered successfully"
+  }
+}
